@@ -12,10 +12,9 @@ describe AwesomePrint do
     output = io.to_s
     output.should contain("spec/awesome_print_spec.cr")
     output.should contain("[1, 2, 3] =")
-    output.should contain("[")
-    output.should contain("1,")
-    output.should contain("2,")
-    output.should contain("3")
+    output.should contain("[0] 1")
+    output.should contain("[1] 2")
+    output.should contain("[2] 3")
     output.should contain("(Array(Int32))")
   end
 

@@ -13,7 +13,7 @@ module AwesomePrint
         inspector.current_indentation
       end
 
-      def indented(&) : Nil
+      def indented(&)
         inspector.increase_indentation { yield }
       end
 

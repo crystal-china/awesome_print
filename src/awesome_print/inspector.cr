@@ -17,7 +17,7 @@ module AwesomePrint
       @current_indentation = 0
     end
 
-    def increase_indentation(&) : Nil
+    def increase_indentation(&)
       @current_indentation += @indent_size.abs
       yield
     ensure
@@ -26,6 +26,10 @@ module AwesomePrint
 
     def colorize? : Bool
       @colors_enabled
+    end
+
+    def awesome(object) : String
+      Formatter.new(self).format(object)
     end
   end
 end

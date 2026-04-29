@@ -14,6 +14,6 @@ module AwesomePrint
   end
 
   private def self.pretty(value) : String
-    value.pretty_inspect(indent: 2).to_s
+    Inspector.new(indent_size: 2).awesome(value)
   end
 end
