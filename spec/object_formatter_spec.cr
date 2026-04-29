@@ -40,4 +40,12 @@ TEXT
 
     output.should eq("42")
   end
+
+  it "keeps nested object closing braces indented to the current level" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
+    output = AwesomePrint::Formatters::ArrayFormatter.new([PersonForAwesomePrint.new("Diana", 1, false)], inspector).format
+
+    output.should contain("  }>")
+    output.should end_with("]")
+  end
 end

@@ -35,4 +35,20 @@ TEXT
 ]
 TEXT
   end
+
+  it "keeps nested array closing brackets indented to the current level" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
+    output = AwesomePrint::Formatters::ArrayFormatter.new([1, [2, 3], 4], inspector).format
+
+    output.should eq <<-TEXT
+[
+  [0] 1,
+  [1] [
+    [0] 2,
+    [1] 3
+  ],
+  [2] 4
+]
+TEXT
+  end
 end

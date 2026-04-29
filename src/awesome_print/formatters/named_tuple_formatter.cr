@@ -26,7 +26,7 @@ module AwesomePrint
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
 
-        "{\n#{data.join(",\n")}\n#{outdent}}"
+        "{\n#{data.join(",\n")}\n#{indent}}"
       end
 
       private def printable_entries : Array(String)

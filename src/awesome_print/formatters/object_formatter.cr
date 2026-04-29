@@ -20,7 +20,7 @@ module AwesomePrint
       end
 
       private def multiline_object : String
-        "#{object_prefix} {\n#{field_lines.join(",\n")}\n#{outdent}}#{object_suffix}"
+        "#{object_prefix} {\n#{field_lines.join(",\n")}\n#{indent}}#{object_suffix}"
       end
 
       private def single_line_object : String
