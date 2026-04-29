@@ -7,6 +7,8 @@ module AwesomePrint
 
     def format(object) : String
       case object
+      when Nil, Bool, Number, Char, Symbol, String
+        object.pretty_inspect(indent: inspector.indent_size).to_s
       when Array
         Formatters::ArrayFormatter.new(object, inspector).format
       when Hash
