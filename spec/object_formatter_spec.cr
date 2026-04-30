@@ -10,6 +10,10 @@ private struct PointForAwesomePrint
   end
 end
 
+private def strip_ansi(value : String) : String
+  value.gsub(/\e\[[\d;]+m/, "")
+end
+
 describe AwesomePrint::Formatters::ObjectFormatter do
   it "formats reference objects with instance variables across multiple lines" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
@@ -21,6 +25,13 @@ describe AwesomePrint::Formatters::ObjectFormatter do
     output.should contain("            @admin = false")
     output.should contain("@very_long_status = \"active\"")
     output.should contain("}>")
+  end
+
+  it "keeps the reference object header text stable when colors are enabled" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false, "active"), inspector).format
+
+    strip_ansi(output).should contain("#<PersonForAwesomePrint:0x")
   end
 
   it "formats structs with instance variables across multiple lines" do

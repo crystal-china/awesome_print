@@ -81,17 +81,19 @@ module AwesomePrint
       private def object_prefix : String
         {% if T < Reference %}
           String.build do |io|
-            io << "#<" << {{ T.name.stringify }} << ":0x"
-            object.object_id.to_s(io, 16)
+            io << colorize("#<", :hash)
+            io << colorize({{ T.name.stringify }}, :class)
+            io << colorize(":0x", :hash)
+            io << colorize(object.object_id.to_s(16), :number)
           end
         {% else %}
-          {{ T.name.stringify }}
+          colorize({{ T.name.stringify }}, :class)
         {% end %}
       end
 
       private def object_suffix : String
         {% if T < Reference %}
-          ">"
+          colorize(">", :hash)
         {% else %}
           ""
         {% end %}
