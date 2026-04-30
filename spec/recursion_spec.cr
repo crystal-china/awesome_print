@@ -7,6 +7,8 @@ private class RecursivePersonForAwesomePrint
   end
 end
 
+private alias RecursiveArrayValueForAwesomePrint = String | Array(RecursiveArrayValueForAwesomePrint)
+
 describe AwesomePrint::Inspector do
   it "replaces recursive object references with a placeholder" do
     person = RecursivePersonForAwesomePrint.new("Diana")
@@ -43,5 +45,16 @@ describe AwesomePrint::Inspector do
     output = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, limit: 1).awesome(person)
 
     output.should contain("@friend = ...RecursivePersonForAwesomePrint...")
+  end
+
+  it "replaces recursive arrays with an array placeholder" do
+    values = [] of RecursiveArrayValueForAwesomePrint
+    values << "one"
+    values << values
+
+    output = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false).awesome(values)
+
+    output.should contain("[0] \"one\"")
+    output.should contain("[1] [...]")
   end
 end
