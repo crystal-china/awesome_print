@@ -20,7 +20,14 @@ module AwesomePrint
       end
 
       private def multiline_object : String
-        "#{object_prefix} {\n#{field_lines.join(",\n")}\n#{indent}}#{object_suffix}"
+        data = field_lines
+        if should_be_limited?
+          data = limited(data, field_width, true)
+          separator_index = get_limit_size // 2
+          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
+        end
+
+        "#{object_prefix} {\n#{data.join(",\n")}\n#{indent}}#{object_suffix}"
       end
 
       private def single_line_object : String
