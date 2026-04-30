@@ -5,6 +5,14 @@ module AwesomePrint
     extend self
 
     COLORS = Hash(Symbol, Colorize::Color){
+      :array     => Colorize::ColorANSI::Yellow,
+      :hash      => Colorize::ColorANSI::DarkGray,
+      :class     => Colorize::ColorANSI::Yellow,
+      :variable  => Colorize::ColorANSI::LightBlue,
+      :string    => Colorize::ColorANSI::Green,
+      :symbol    => Colorize::ColorANSI::Cyan,
+      :number    => Colorize::ColorANSI::Yellow,
+      :keyword   => Colorize::ColorANSI::Red,
       :gray      => Colorize::ColorANSI::LightGray,
       :red       => Colorize::ColorANSI::Red,
       :green     => Colorize::ColorANSI::Green,
@@ -33,7 +41,8 @@ module AwesomePrint
       value.colorize(color).toggle(enabled).to_s
     end
 
-    {% for name in [:gray, :red, :green, :yellow, :blue, :purple, :cyan, :white,
+    {% for name in [:array, :hash, :class, :variable, :string, :symbol, :number, :keyword,
+                    :gray, :red, :green, :yellow, :blue, :purple, :cyan, :white,
                     :grayish, :redish, :greenish, :yellowish, :blueish, :purpleish,
                     :cyanish, :whiteish, :pale] %}
       def {{ name.id }}(value : String, enabled : Bool = true) : String

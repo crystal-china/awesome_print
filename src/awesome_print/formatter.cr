@@ -7,8 +7,18 @@ module AwesomePrint
 
     def format(object) : String
       case object
-      when Nil, Bool, Number, Char, Symbol, String
-        object.pretty_inspect(indent: inspector.indent_size).to_s
+      when Nil
+        Colors.apply(:keyword, "nil", inspector.colorize?)
+      when Bool
+        Colors.apply(:keyword, object.to_s, inspector.colorize?)
+      when Number
+        Colors.apply(:number, object.to_s, inspector.colorize?)
+      when Char
+        Colors.apply(:string, object.inspect, inspector.colorize?)
+      when Symbol
+        Colors.apply(:symbol, object.inspect, inspector.colorize?)
+      when String
+        Colors.apply(:string, object.inspect, inspector.colorize?)
       when Array
         Formatters::ArrayFormatter.new(object, inspector).format
       when Hash

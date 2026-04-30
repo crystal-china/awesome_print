@@ -5,6 +5,10 @@ private class PersonForApMacro
   end
 end
 
+private def strip_ansi(value : String) : String
+  value.gsub(/\e\[[\d;]+m/, "")
+end
+
 describe AwesomePrint do
   it "prints file, line, expression, pretty value, and type" do
     io = IO::Memory.new
@@ -14,7 +18,7 @@ describe AwesomePrint do
 
     value.should eq([1, 2, 3])
 
-    output = io.to_s
+    output = strip_ansi(io.to_s)
     output.should contain("spec/awesome_print_spec.cr")
     output.should contain("[1, 2, 3] =")
     output.should contain("[0] 1")
@@ -56,7 +60,7 @@ describe AwesomePrint do
     value = ap!(person, order: :sorted)
 
     value.should be(person)
-    output = io.to_s
+    output = strip_ansi(io.to_s)
     admin_index = output.index("@admin = false").not_nil!
     name_index = output.index("@name = \"Diana\"").not_nil!
 
@@ -70,7 +74,7 @@ describe AwesomePrint do
     value = ap!([1, 2, 3], multiline: false)
 
     value.should eq([1, 2, 3])
-    io.to_s.should contain("[ 1, 2, 3 ]")
+    strip_ansi(io.to_s).should contain("[ 1, 2, 3 ]")
   end
 
   it "passes limit options through ap!" do
@@ -80,7 +84,7 @@ describe AwesomePrint do
     value = ap!([1, 2, 3, 4, 5, 6, 7], limit: 5)
 
     value.should eq([1, 2, 3, 4, 5, 6, 7])
-    output = io.to_s
+    output = strip_ansi(io.to_s)
     output.should contain("[0] 1")
     output.should contain("[1] 2")
     output.should contain("[2] .. [4]")
@@ -95,7 +99,7 @@ describe AwesomePrint do
     values = ap!([3, 1, 2], {"z" => 1, "a" => 2}, multiline: false, order: :sorted)
 
     values.should eq({[3, 1, 2], {"z" => 1, "a" => 2}})
-    output = io.to_s
+    output = strip_ansi(io.to_s)
     output.should contain("[ 3, 1, 2 ]")
     output.should contain(%({ "a" => 2, "z" => 1 }))
   end

@@ -15,4 +15,15 @@ describe AwesomePrint::Colors do
     AwesomePrint::Colors.purpleish("value").should contain("\e[")
     AwesomePrint::Colors.pale("value").should contain("\e[")
   end
+
+  it "applies ansi colors for semantic formatter names" do
+    AwesomePrint::Colors.string("value").should contain("\e[")
+    AwesomePrint::Colors.symbol("value").should contain("\e[")
+    AwesomePrint::Colors.number("value").should contain("\e[")
+    AwesomePrint::Colors.keyword("value").should contain("\e[")
+    AwesomePrint::Colors.variable("value").should contain("\e[")
+    AwesomePrint::Colors.class("value").should contain("\e[")
+    AwesomePrint::Colors.array("value").should contain("\e[")
+    AwesomePrint::Colors.hash("value").should contain("\e[")
+  end
 end
