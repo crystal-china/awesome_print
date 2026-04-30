@@ -5,6 +5,11 @@ private class HashKeyForAwesomePrint
   end
 end
 
+private struct StructKeyForAwesomePrint
+  def initialize(@x : Int32, @y : Int32)
+  end
+end
+
 describe AwesomePrint::Formatters::HashFormatter do
   it "formats symbol-keyed hashes across multiple lines" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
@@ -98,5 +103,18 @@ TEXT
     output.should contain("@id = 1")
     output.should contain(" => \"one\"")
     output.should_not contain("\n  @id = 1\n}> =>")
+  end
+
+  it "formats tuple, named tuple, and struct keys on a single line" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
+    output = AwesomePrint::Formatters::HashFormatter.new({
+      {1, 2} => "tuple",
+      ({name: "Diana", rank: 1}) => "named",
+      StructKeyForAwesomePrint.new(3, 4) => "struct",
+    }, inspector).format
+
+    output.should contain("{1, 2} => \"tuple\"")
+    output.should contain("{ name: \"Diana\", rank: 1 } => \"named\"")
+    output.should contain("StructKeyForAwesomePrint(@x=3, @y=4) => \"struct\"")
   end
 end
