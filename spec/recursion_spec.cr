@@ -26,4 +26,13 @@ describe AwesomePrint::Inspector do
 
     output.index("@name = \"Diana\"").not_nil!.should be < output.index("@friend = ...RecursivePersonForAwesomePrint...").not_nil!
   end
+
+  it "keeps recursive fields after non-recursive fields when order is sorted" do
+    person = RecursivePersonForAwesomePrint.new("Diana")
+    person.friend = person
+
+    output = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, order: :sorted).awesome(person)
+
+    output.index("@name = \"Diana\"").not_nil!.should be < output.index("@friend = ...RecursivePersonForAwesomePrint...").not_nil!
+  end
 end
