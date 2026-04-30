@@ -1,18 +1,25 @@
 module AwesomePrint
   class Inspector
+    enum Order
+      Natural
+      Sorted
+    end
+
     getter indent_size : Int32
     getter current_indentation : Int32
     getter multiline : Bool
     getter index : Bool
     getter limit : Int32?
     getter colors_enabled : Bool
+    getter order : Order
 
     def initialize(
       @indent_size : Int32 = 4,
       @multiline : Bool = true,
       @index : Bool = true,
       @limit : Int32? = nil,
-      @colors_enabled : Bool = true
+      @colors_enabled : Bool = true,
+      @order : Order = :natural
     )
       @current_indentation = 0
       @seen_object_ids = [] of UInt64

@@ -49,7 +49,11 @@ module AwesomePrint
           {format_key(key), value, key.is_a?(Symbol)}
         end
 
-        entries.sort_by { |entry| entry[0] }
+        if inspector.order.sorted?
+          entries.sort_by { |entry| entry[0] }
+        else
+          entries
+        end
       end
 
       private def left_width(keys) : Int32

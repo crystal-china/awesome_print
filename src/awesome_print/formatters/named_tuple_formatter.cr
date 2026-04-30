@@ -33,7 +33,10 @@ module AwesomePrint
         keys = printable_keys
         width = left_width(keys)
 
-        named_tuple.to_a.sort_by(&.[0].to_s).map do |key, value|
+        entries = named_tuple.to_a
+        entries = entries.sort_by(&.[0].to_s) if inspector.order.sorted?
+
+        entries.map do |key, value|
           key_string = colorize("#{key}:", :symbol)
           indented do
             "#{align(key_string, width)} #{inspector.awesome(value)}"
@@ -42,9 +45,12 @@ module AwesomePrint
       end
 
       private def printable_keys
-        named_tuple.keys.to_a.map do |key|
+        keys = named_tuple.keys.to_a
+        keys = keys.sort if inspector.order.sorted?
+
+        keys.map do |key|
           colorize("#{key}:", :symbol)
-        end.sort
+        end
       end
 
       private def left_width(keys) : Int32

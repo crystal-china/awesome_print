@@ -46,4 +46,30 @@ TEXT
 }
 TEXT
   end
+
+  it "preserves insertion order when order is natural" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, order: :natural)
+    output = AwesomePrint::Formatters::HashFormatter.new({"z" => 1, "a" => 2, "m" => 3}, inspector).format
+
+    output.should eq <<-TEXT
+{
+  "z" => 1,
+  "a" => 2,
+  "m" => 3
+}
+TEXT
+  end
+
+  it "sorts keys when order is sorted" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, order: :sorted)
+    output = AwesomePrint::Formatters::HashFormatter.new({"z" => 1, "a" => 2, "m" => 3}, inspector).format
+
+    output.should eq <<-TEXT
+{
+  "a" => 2,
+  "m" => 3,
+  "z" => 1
+}
+TEXT
+  end
 end

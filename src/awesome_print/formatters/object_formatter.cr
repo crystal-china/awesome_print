@@ -28,38 +28,40 @@ module AwesomePrint
       end
 
       private def field_lines : Array(String)
-        lines = [] of String
-
-        {% for ivar in T.instance_vars %}
-          lines << indented do
-            key = colorize("@{{ ivar.id }}", :variable)
-            "#{align(key, field_width)}#{colorize(" = ", :hash)}#{inspector.awesome(@object.@{{ ivar.id }})}"
+        field_entries.map do |colored_key, rendered_value|
+          indented do
+            "#{align(colored_key, field_width)}#{colorize(" = ", :hash)}#{rendered_value}"
           end
-        {% end %}
-
-        lines
+        end
       end
 
       private def single_line_field_lines : Array(String)
-        lines = [] of String
-
-        {% for ivar in T.instance_vars %}
-          key = colorize("@{{ ivar.id }}", :variable)
-          lines << "#{key}#{colorize(" = ", :hash)}#{inspector.awesome(@object.@{{ ivar.id }})}"
-        {% end %}
-
-        lines
+        field_entries.map do |colored_key, rendered_value|
+          "#{colored_key}#{colorize(" = ", :hash)}#{rendered_value}"
+        end
       end
 
       private def field_width : Int32
-        max_width = 0
+        field_entries.max_of { |entry| field_name(entry[0]).size } + inspector.indent_size.abs
+      end
+
+      private def field_entries : Array({String, String})
+        entries = [] of {String, String}
 
         {% for ivar in T.instance_vars %}
-          ivar_width = {{ ivar.name.stringify.size + 1 }}
-          max_width = ivar_width if ivar_width > max_width
+          key = colorize("@{{ ivar.id }}", :variable)
+          entries << {key, inspector.awesome(@object.@{{ ivar.id }})}
         {% end %}
 
-        max_width + inspector.indent_size.abs
+        if inspector.order.sorted?
+          entries.sort_by { |entry| field_name(entry[0]) }
+        else
+          entries
+        end
+      end
+
+      private def field_name(colored_key : String) : String
+        colorless(colored_key)
       end
 
       private def object_prefix : String

@@ -58,4 +58,16 @@ TEXT
     output.should contain("@rank = 1")
     output.should_not contain("             @name")
   end
+
+  it "sorts ivars by name when order is sorted" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, order: :sorted)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false, "active"), inspector).format
+
+    admin_index = output.index("@admin = false").not_nil!
+    name_index = output.index("@name = \"Diana\"").not_nil!
+    rank_index = output.index("@rank = 1").not_nil!
+
+    admin_index.should be < name_index
+    name_index.should be < rank_index
+  end
 end
