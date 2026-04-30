@@ -15,6 +15,7 @@ module AwesomePrint
       @colors_enabled : Bool = true
     )
       @current_indentation = 0
+      @seen_object_ids = [] of UInt64
     end
 
     def increase_indentation(&)
@@ -29,7 +30,36 @@ module AwesomePrint
     end
 
     def awesome(object) : String
-      Formatter.new(self).format(object)
+      case object
+      when Reference
+        if recursive?(object)
+          nested(object)
+        else
+          begin
+            @seen_object_ids << object.object_id
+            Formatter.new(self).format(object)
+          ensure
+            @seen_object_ids.pop
+          end
+        end
+      else
+        Formatter.new(self).format(object)
+      end
+    end
+
+    private def recursive?(object : Reference) : Bool
+      @seen_object_ids.includes?(object.object_id)
+    end
+
+    private def nested(object : Reference) : String
+      case object
+      when Array
+        Colors.apply(:array, "[...]", colorize?)
+      when Hash
+        Colors.apply(:hash, "{...}", colorize?)
+      else
+        Colors.apply(:class, "...#{object.class}...", colorize?)
+      end
     end
   end
 end
