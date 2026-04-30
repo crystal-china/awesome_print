@@ -70,4 +70,22 @@ TEXT
     admin_index.should be < name_index
     name_index.should be < rank_index
   end
+
+  it "keeps sorted single line object output compact" do
+    inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false, order: :sorted)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false, "active"), inspector).format
+
+    output.should contain("@admin = false")
+    output.should contain("@name = \"Diana\"")
+    output.should contain("@rank = 1")
+    output.should_not contain("\n")
+    output.should_not contain("             @name")
+
+    admin_index = output.index("@admin = false").not_nil!
+    name_index = output.index("@name = \"Diana\"").not_nil!
+    rank_index = output.index("@rank = 1").not_nil!
+
+    admin_index.should be < name_index
+    name_index.should be < rank_index
+  end
 end

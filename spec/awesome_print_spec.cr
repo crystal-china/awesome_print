@@ -87,4 +87,16 @@ describe AwesomePrint do
     output.should contain("[5] 6")
     output.should contain("[6] 7")
   end
+
+  it "applies options to every argument when given multiple expressions" do
+    io = IO::Memory.new
+    AwesomePrint.output = io
+
+    values = ap!([3, 1, 2], {"z" => 1, "a" => 2}, multiline: false, order: :sorted)
+
+    values.should eq({[3, 1, 2], {"z" => 1, "a" => 2}})
+    output = io.to_s
+    output.should contain("[ 3, 1, 2 ]")
+    output.should contain(%({ "a" => 2, "z" => 1 }))
+  end
 end
