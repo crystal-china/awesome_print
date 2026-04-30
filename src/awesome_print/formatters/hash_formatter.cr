@@ -68,8 +68,19 @@ module AwesomePrint
         when String
           colorize(key.inspect, :string)
         else
-          inspector.awesome(key)
+          key_inspector.awesome(key)
         end
+      end
+
+      private def key_inspector : Inspector
+        @key_inspector ||= Inspector.new(
+          indent_size: inspector.indent_size,
+          multiline: false,
+          index: inspector.index,
+          limit: inspector.limit,
+          colors_enabled: inspector.colors_enabled,
+          order: inspector.order
+        )
       end
     end
   end

@@ -1,5 +1,10 @@
 require "./spec_helper"
 
+private class HashKeyForAwesomePrint
+  def initialize(@id : Int32)
+  end
+end
+
 describe AwesomePrint::Formatters::HashFormatter do
   it "formats symbol-keyed hashes across multiple lines" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
@@ -71,5 +76,27 @@ TEXT
   "z" => 1
 }
 TEXT
+  end
+
+  it "formats non-string scalar keys on a single line" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
+    output = AwesomePrint::Formatters::HashFormatter.new({1 => "one", true => "yes"}, inspector).format
+
+    output.should eq <<-TEXT
+{
+     1 => "one",
+  true => "yes"
+}
+TEXT
+  end
+
+  it "formats object keys on a single line" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
+    output = AwesomePrint::Formatters::HashFormatter.new({HashKeyForAwesomePrint.new(1) => "one"}, inspector).format
+
+    output.should contain("#<HashKeyForAwesomePrint:0x")
+    output.should contain("@id = 1")
+    output.should contain(" => \"one\"")
+    output.should_not contain("\n  @id = 1\n}> =>")
   end
 end
