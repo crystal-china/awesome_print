@@ -24,7 +24,7 @@ module AwesomePrint
       end
 
       private def single_line_object : String
-        "#{object_prefix} { #{field_lines.join(", ")} }#{object_suffix}"
+        "#{object_prefix} { #{single_line_field_lines.join(", ")} }#{object_suffix}"
       end
 
       private def field_lines : Array(String)
@@ -33,11 +33,33 @@ module AwesomePrint
         {% for ivar in T.instance_vars %}
           lines << indented do
             key = colorize("@{{ ivar.id }}", :variable)
-            "#{indent}#{key}#{colorize(" = ", :hash)}#{inspector.awesome(@object.@{{ ivar.id }})}"
+            "#{align(key, field_width)}#{colorize(" = ", :hash)}#{inspector.awesome(@object.@{{ ivar.id }})}"
           end
         {% end %}
 
         lines
+      end
+
+      private def single_line_field_lines : Array(String)
+        lines = [] of String
+
+        {% for ivar in T.instance_vars %}
+          key = colorize("@{{ ivar.id }}", :variable)
+          lines << "#{key}#{colorize(" = ", :hash)}#{inspector.awesome(@object.@{{ ivar.id }})}"
+        {% end %}
+
+        lines
+      end
+
+      private def field_width : Int32
+        max_width = 0
+
+        {% for ivar in T.instance_vars %}
+          ivar_width = {{ ivar.name.stringify.size + 1 }}
+          max_width = ivar_width if ivar_width > max_width
+        {% end %}
+
+        max_width + inspector.indent_size.abs
       end
 
       private def object_prefix : String

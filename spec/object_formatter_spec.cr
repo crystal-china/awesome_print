@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 private class PersonForAwesomePrint
-  def initialize(@name : String, @rank : Int32, @admin : Bool)
+  def initialize(@name : String, @rank : Int32, @admin : Bool, @very_long_status : String)
   end
 end
 
@@ -13,12 +13,13 @@ end
 describe AwesomePrint::Formatters::ObjectFormatter do
   it "formats reference objects with instance variables across multiple lines" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
-    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false), inspector).format
+    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false, "active"), inspector).format
 
     output.should contain("#<PersonForAwesomePrint:0x")
-    output.should contain("@name = \"Diana\"")
-    output.should contain("@rank = 1")
-    output.should contain("@admin = false")
+    output.should contain("             @name = \"Diana\"")
+    output.should contain("             @rank = 1")
+    output.should contain("            @admin = false")
+    output.should contain("@very_long_status = \"active\"")
     output.should contain("}>")
   end
 
@@ -43,9 +44,18 @@ TEXT
 
   it "keeps nested object closing braces indented to the current level" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
-    output = AwesomePrint::Formatters::ArrayFormatter.new([PersonForAwesomePrint.new("Diana", 1, false)], inspector).format
+    output = AwesomePrint::Formatters::ArrayFormatter.new([PersonForAwesomePrint.new("Diana", 1, false, "active")], inspector).format
 
     output.should contain("  }>")
     output.should end_with("]")
+  end
+
+  it "keeps single line object output natural" do
+    inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false, "active"), inspector).format
+
+    output.should contain("@name = \"Diana\"")
+    output.should contain("@rank = 1")
+    output.should_not contain("             @name")
   end
 end
