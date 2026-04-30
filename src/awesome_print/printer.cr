@@ -1,8 +1,8 @@
 module AwesomePrint
   class_property output : IO = STDOUT
 
-  def self.print(*, expression : String, value, file : String, line : Int32)
-    rendered_value = pretty(value)
+  def self.print(*, expression : String, value, file : String, line : Int32, inspector : Inspector = Inspector.new(indent_size: 2))
+    rendered_value = pretty(value, inspector)
     rendered_type = typeof(value).to_s
 
     output << file << ":" << line << " -- " << expression << " ="
@@ -13,7 +13,7 @@ module AwesomePrint
     output.flush
   end
 
-  private def self.pretty(value) : String
-    Inspector.new(indent_size: 2).awesome(value)
+  private def self.pretty(value, inspector : Inspector) : String
+    inspector.awesome(value)
   end
 end

@@ -1,6 +1,6 @@
 module AwesomePrint
   module KernelExtension
-    macro ap!(*args, file = __FILE__, line = __LINE__)
+    macro ap!(*args, file = __FILE__, line = __LINE__, **options)
       {% unless args.empty? %}
         %arg_values = {
           {% for arg in args %}
@@ -14,12 +14,22 @@ module AwesomePrint
           {% end %}
         }
 
+        {% unless options.empty? %}
+          %ap_inspector = ::AwesomePrint::Inspector.new(
+            indent_size: 2,
+            {{ options.double_splat }}
+          )
+        {% else %}
+          %ap_inspector = ::AwesomePrint::Inspector.new(indent_size: 2)
+        {% end %}
+
         {% for arg, i in args %}
           ::AwesomePrint.print(
             expression: %arg_expressions[{{ i }}],
             value: %arg_values[{{ i }}],
             file: {{ file }},
-            line: {{ line }}
+            line: {{ line }},
+            inspector: %ap_inspector
           )
         {% end %}
 
