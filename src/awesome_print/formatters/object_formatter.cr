@@ -28,7 +28,7 @@ module AwesomePrint
       end
 
       private def field_lines : Array(String)
-        field_entries.map do |colored_key, rendered_value|
+        field_entries.map do |_recursive, colored_key, rendered_value|
           indented do
             "#{align(colored_key, field_width)}#{colorize(" = ", :hash)}#{rendered_value}"
           end
@@ -36,27 +36,34 @@ module AwesomePrint
       end
 
       private def single_line_field_lines : Array(String)
-        field_entries.map do |colored_key, rendered_value|
+        field_entries.map do |_recursive, colored_key, rendered_value|
           "#{colored_key}#{colorize(" = ", :hash)}#{rendered_value}"
         end
       end
 
       private def field_width : Int32
-        field_entries.max_of { |entry| field_name(entry[0]).size } + inspector.indent_size.abs
+        field_entries.max_of { |entry| field_name(entry[1]).size } + inspector.indent_size.abs
       end
 
-      private def field_entries : Array({String, String})
-        entries = [] of {String, String}
+      private def field_entries : Array({Bool, String, String})
+        entries = [] of {Bool, String, String}
 
         {% for ivar in T.instance_vars %}
           key = colorize("@{{ ivar.id }}", :variable)
-          entries << {key, inspector.awesome(@object.@{{ ivar.id }})}
+          value = @object.@{{ ivar.id }}
+          entries << {inspector.recursive_reference?(value), key, inspector.awesome(value)}
         {% end %}
 
         if inspector.order.sorted?
-          entries.sort_by { |entry| field_name(entry[0]) }
+          entries.sort_by do |entry|
+            recursive, colored_key, _rendered_value = entry
+            {recursive ? 1 : 0, field_name(colored_key)}
+          end
         else
-          entries
+          entries.sort_by do |entry|
+            recursive, _colored_key, _rendered_value = entry
+            recursive ? 1 : 0
+          end
         end
       end
 

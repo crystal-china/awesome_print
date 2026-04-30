@@ -58,6 +58,10 @@ module AwesomePrint
       @seen_object_ids.includes?(object.object_id)
     end
 
+    def recursive_reference?(object) : Bool
+      object.is_a?(Reference) && recursive?(object)
+    end
+
     private def nested(object : Reference) : String
       case object
       when Array

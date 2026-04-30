@@ -17,4 +17,13 @@ describe AwesomePrint::Inspector do
     output.should contain("@name = \"Diana\"")
     output.should contain("@friend = ...RecursivePersonForAwesomePrint...")
   end
+
+  it "puts non-recursive fields before recursive fields" do
+    person = RecursivePersonForAwesomePrint.new("Diana")
+    person.friend = person
+
+    output = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false).awesome(person)
+
+    output.index("@name = \"Diana\"").not_nil!.should be < output.index("@friend = ...RecursivePersonForAwesomePrint...").not_nil!
+  end
 end
