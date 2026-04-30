@@ -83,6 +83,21 @@ TEXT
 TEXT
   end
 
+  it "keeps sorted hashes stable when limit is applied" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, limit: 5, order: :sorted)
+    output = AwesomePrint::Formatters::HashFormatter.new({"g" => 7, "b" => 2, "f" => 6, "a" => 1, "e" => 5, "c" => 3, "d" => 4}, inspector).format
+
+    output.should eq <<-TEXT
+{
+  "a" => 1,
+  "b" => 2,
+  "c" => 3 .. "e" => 5,
+  "f" => 6,
+  "g" => 7
+}
+TEXT
+  end
+
   it "formats non-string scalar keys on a single line" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
     output = AwesomePrint::Formatters::HashFormatter.new({1 => "one", true => "yes"}, inspector).format

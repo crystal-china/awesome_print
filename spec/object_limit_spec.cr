@@ -25,4 +25,16 @@ describe AwesomePrint::Formatters::ObjectFormatter do
     output.should contain("@f = 6")
     output.should contain("@g = 7")
   end
+
+  it "keeps sorted object fields stable when limit is applied" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, limit: 5, order: :sorted)
+    object = ManyFieldsForAwesomePrint.new(1, 2, 3, 4, 5, 6, 7)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(object, inspector).format
+
+    output.should contain("@a = 1")
+    output.should contain("@b = 2")
+    output.should contain("@c = 3 .. @e = 5")
+    output.should contain("@f = 6")
+    output.should contain("@g = 7")
+  end
 end

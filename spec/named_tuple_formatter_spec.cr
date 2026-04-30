@@ -34,4 +34,19 @@ TEXT
 }
 TEXT
   end
+
+  it "keeps sorted named tuples stable when limit is applied" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, limit: 5, colors_enabled: false, order: :sorted)
+    output = AwesomePrint::Formatters::NamedTupleFormatter.new({g: 7, b: 2, f: 6, a: 1, e: 5, c: 3, d: 4}, inspector).format
+
+    output.should eq <<-TEXT
+{
+  a: 1,
+  b: 2,
+  c: 3 .. e: 5,
+  f: 6,
+  g: 7
+}
+TEXT
+  end
 end

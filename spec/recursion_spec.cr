@@ -35,4 +35,13 @@ describe AwesomePrint::Inspector do
 
     output.index("@name = \"Diana\"").not_nil!.should be < output.index("@friend = ...RecursivePersonForAwesomePrint...").not_nil!
   end
+
+  it "keeps recursive fields visible when limit is applied" do
+    person = RecursivePersonForAwesomePrint.new("Diana")
+    person.friend = person
+
+    output = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, limit: 1).awesome(person)
+
+    output.should contain("@friend = ...RecursivePersonForAwesomePrint...")
+  end
 end
