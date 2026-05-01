@@ -8,12 +8,12 @@ module AwesomePrint
       end
 
       def format : String
-        return "[]" if array.empty?
+        return colorize("[]", :array) if array.empty?
 
         if inspector.multiline
           multiline_array
         else
-          "[ #{array.map { |item| inspector.awesome(item) }.join(", ")} ]"
+          "#{colorize("[", :array)} #{array.map { |item| inspector.awesome(item) }.join(", ")} #{colorize("]", :array)}"
         end
       end
 
@@ -24,7 +24,7 @@ module AwesomePrint
           separator_index = get_limit_size // 2
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
-        "[\n#{data.join(",\n")}\n#{indent}]"
+        "#{colorize("[", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("]", :array)}"
       end
 
       private def generate_printable_array : Array(String)

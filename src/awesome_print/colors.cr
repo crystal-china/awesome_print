@@ -5,13 +5,13 @@ module AwesomePrint
     extend self
 
     COLORS = Hash(Symbol, Colorize::Color){
-      :array     => Colorize::ColorANSI::Yellow,
+      :array     => Colorize::ColorANSI::White,
       :hash      => Colorize::ColorANSI::DarkGray,
-      :class     => Colorize::ColorANSI::Yellow,
+      :class     => Colorize::ColorANSI::LightYellow,
       :variable  => Colorize::ColorANSI::LightBlue,
       :string    => Colorize::ColorANSI::Green,
       :symbol    => Colorize::ColorANSI::Cyan,
-      :number    => Colorize::ColorANSI::Yellow,
+      :number    => Colorize::ColorANSI::Cyan,
       :keyword   => Colorize::ColorANSI::Red,
       :gray      => Colorize::ColorANSI::LightGray,
       :red       => Colorize::ColorANSI::Red,
@@ -38,7 +38,9 @@ module AwesomePrint
       color = COLORS[name]?
       return value unless color
 
-      value.colorize(color).toggle(enabled).to_s
+      colored = value.colorize(color)
+      colored = colored.mode(:bold) if name == :array
+      colored.toggle(enabled).to_s
     end
 
     {% for name in [:array, :hash, :class, :variable, :string, :symbol, :number, :keyword,

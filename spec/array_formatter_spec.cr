@@ -1,5 +1,9 @@
 require "./spec_helper"
 
+private def strip_ansi(value : String) : String
+  value.gsub(/\e\[[\d;]+m/, "")
+end
+
 describe AwesomePrint::Formatters::ArrayFormatter do
   it "formats arrays across multiple lines with indexes" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
@@ -48,6 +52,19 @@ TEXT
     [1] 3
   ],
   [2] 4
+]
+TEXT
+  end
+
+  it "keeps array wrapper text stable when colors are enabled" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2)
+    output = AwesomePrint::Formatters::ArrayFormatter.new([1, 2, 3], inspector).format
+
+    strip_ansi(output).should eq <<-TEXT
+[
+  [0] 1,
+  [1] 2,
+  [2] 3
 ]
 TEXT
   end

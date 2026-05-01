@@ -8,12 +8,12 @@ module AwesomePrint
       end
 
       def format : String
-        return "{}" if named_tuple.empty?
+        return colorize("{}", :hash) if named_tuple.empty?
 
         if inspector.multiline
           multiline_named_tuple
         else
-          "{ #{printable_entries.join(", ")} }"
+          "#{colorize("{", :hash)} #{printable_entries.join(", ")} #{colorize("}", :hash)}"
         end
       end
 
@@ -26,7 +26,7 @@ module AwesomePrint
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
 
-        "{\n#{data.join(",\n")}\n#{indent}}"
+        "#{colorize("{", :hash)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :hash)}"
       end
 
       private def printable_entries : Array(String)

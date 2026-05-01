@@ -5,6 +5,10 @@ private class HashKeyForAwesomePrint
   end
 end
 
+private def strip_ansi(value : String) : String
+  value.gsub(/\e\[[\d;]+m/, "")
+end
+
 private struct StructKeyForAwesomePrint
   def initialize(@x : Int32, @y : Int32)
   end
@@ -113,6 +117,18 @@ TEXT
 {
      1 => "one",
   true => "yes"
+}
+TEXT
+  end
+
+  it "keeps hash wrapper text stable when colors are enabled" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2)
+    output = AwesomePrint::Formatters::HashFormatter.new({"name" => "Diana", "rank" => 1}, inspector).format
+
+    strip_ansi(output).should eq <<-TEXT
+{
+  "name" => "Diana",
+  "rank" => 1
 }
 TEXT
   end

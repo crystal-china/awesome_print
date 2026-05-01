@@ -26,4 +26,14 @@ describe AwesomePrint::Colors do
     AwesomePrint::Colors.array("value").should contain("\e[")
     AwesomePrint::Colors.hash("value").should contain("\e[")
   end
+
+  it "uses distinct ansi colors for array, number, and class tokens" do
+    AwesomePrint::Colors.array("value").should_not eq(AwesomePrint::Colors.number("value"))
+    AwesomePrint::Colors.array("value").should_not eq(AwesomePrint::Colors.class("value"))
+    AwesomePrint::Colors.number("value").should_not eq(AwesomePrint::Colors.class("value"))
+  end
+
+  it "renders array tokens brighter than plain white" do
+    AwesomePrint::Colors.array("value").should_not eq(AwesomePrint::Colors.white("value"))
+  end
 end

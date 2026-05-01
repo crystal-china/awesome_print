@@ -8,12 +8,12 @@ module AwesomePrint
       end
 
       def format : String
-        return "{}" if hash.empty?
+        return colorize("{}", :hash) if hash.empty?
 
         if inspector.multiline
           multiline_hash
         else
-          "{ #{printable_hash.join(", ")} }"
+          "#{colorize("{", :hash)} #{printable_hash.join(", ")} #{colorize("}", :hash)}"
         end
       end
 
@@ -26,7 +26,7 @@ module AwesomePrint
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
 
-        "{\n#{data.join(",\n")}\n#{indent}}"
+        "#{colorize("{", :hash)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :hash)}"
       end
 
       private def printable_hash : Array(String)
