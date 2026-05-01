@@ -8,9 +8,9 @@ module AwesomePrint
     def format(object) : String
       case object
       when Nil
-        Colors.apply(:keyword, "nil", inspector.colorize?)
+        Colors.nilclass("nil", inspector.colorize?)
       when Bool
-        Colors.apply(:keyword, object.to_s, inspector.colorize?)
+        Colors.apply(object ? :trueclass : :falseclass, object.to_s, inspector.colorize?)
       when Number
         Colors.apply(:number, object.to_s, inspector.colorize?)
       when Char

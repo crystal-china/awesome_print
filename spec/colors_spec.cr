@@ -21,6 +21,9 @@ describe AwesomePrint::Colors do
     AwesomePrint::Colors.symbol("value").should contain("\e[")
     AwesomePrint::Colors.number("value").should contain("\e[")
     AwesomePrint::Colors.keyword("value").should contain("\e[")
+    AwesomePrint::Colors.nilclass("value").should contain("\e[")
+    AwesomePrint::Colors.trueclass("value").should contain("\e[")
+    AwesomePrint::Colors.falseclass("value").should contain("\e[")
     AwesomePrint::Colors.variable("value").should contain("\e[")
     AwesomePrint::Colors.class("value").should contain("\e[")
     AwesomePrint::Colors.array("value").should contain("\e[")
@@ -35,5 +38,11 @@ describe AwesomePrint::Colors do
 
   it "renders array tokens brighter than plain white" do
     AwesomePrint::Colors.array("value").should_not eq(AwesomePrint::Colors.white("value"))
+  end
+
+  it "uses awesome_print style colors for nil, true, and false" do
+    AwesomePrint::Colors.nilclass("nil").should eq(AwesomePrint::Colors.red("nil"))
+    AwesomePrint::Colors.trueclass("true").should eq(AwesomePrint::Colors.green("true"))
+    AwesomePrint::Colors.falseclass("false").should eq(AwesomePrint::Colors.red("false"))
   end
 end
