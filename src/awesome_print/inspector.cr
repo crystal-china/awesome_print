@@ -11,6 +11,8 @@ module AwesomePrint
     getter index : Bool
     getter limit : Int32?
     getter colors_enabled : Bool
+    getter show_backtrace : Bool
+    getter backtrace_limit : Int32
     getter order : Order
 
     def initialize(
@@ -19,6 +21,8 @@ module AwesomePrint
       @index : Bool = true,
       @limit : Int32? = nil,
       @colors_enabled : Bool = true,
+      @show_backtrace : Bool = true,
+      @backtrace_limit : Int32 = 8,
       @order : Order = :natural
     )
       @current_indentation = 0

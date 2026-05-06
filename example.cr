@@ -30,6 +30,16 @@ class MixedKey
   end
 end
 
+def root_failure
+  raise RuntimeError.new("root cause")
+end
+
+def wrapped_failure
+  root_failure
+rescue ex
+  raise Exception.new("bad value", ex)
+end
+
 struct StructKey
   def initialize(@x : Int32, @y : Int32)
   end
@@ -44,6 +54,7 @@ numbers = [1, 2, 3]
 long_numbers = [1, 2, 3, 4, 5, 6, 7]
 nested_numbers = [1, [2, 3], 4]
 bytes_value = Bytes[65, 66, 67]
+slice_value = Slice[1, 2, 3]
 enum_value = DemoEnum::Alpha
 path_value = Path["foo/bar"]
 regex_value = /foo/i
@@ -52,7 +63,11 @@ time_value = Time.utc(2026, 5, 6, 12, 34, 56)
 set_values = Set{1, 2, 3}
 tuple_values = {1, 2, 3}
 literal_values = [:alpha, nil, true, false]
-error_value = Exception.new("bad value", RuntimeError.new("root cause"))
+error_value = begin
+  wrapped_failure
+rescue ex
+  ex
+end
 profile = {"name" => "Diana", "rank" => 1, "admin" => false}
 mixed_key_profile = {1 => "one", true => "yes", MixedKey.new(7) => "object"}
 composite_key_profile = {
@@ -74,6 +89,7 @@ ap!(numbers)
 ap!(long_numbers, limit: 5)
 ap!(nested_numbers)
 ap!(bytes_value)
+ap!(slice_value)
 ap!(enum_value)
 ap!(path_value)
 ap!(regex_value)
