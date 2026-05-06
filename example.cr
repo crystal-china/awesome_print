@@ -75,9 +75,11 @@ ap!(person, order: :sorted)
 ap!(numbers, multiline: false)
 
 puts
+# Keep one no-color baseline sample for structure-only comparisons.
 puts "-- custom inspector: natural order --"
 puts AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, order: :natural).awesome(profile)
 
 puts
+# Keep one no-color baseline sample for structure-only comparisons.
 puts "-- custom inspector: sorted order --"
 puts AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, order: :sorted).awesome(person)

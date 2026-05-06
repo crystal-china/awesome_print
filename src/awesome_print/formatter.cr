@@ -27,6 +27,8 @@ module AwesomePrint
         Formatters::HashFormatter.new(object, inspector).format
       when NamedTuple
         Formatters::NamedTupleFormatter.new(object, inspector).format
+      when Struct
+        Formatters::StructFormatter.new(object, inspector).format
       else
         Formatters::ObjectFormatter.new(object, inspector).format
       end
