@@ -8,7 +8,12 @@ module AwesomePrint
       end
 
       def format : String
-        "#{colorize("Path[", :class)}#{inspector.awesome(path.to_s)}#{colorize("]", :array)}"
+        String.build do |io|
+          io << colorize("Path", :class)
+          io << colorize("[", :array)
+          io << inspector.awesome(path.to_s)
+          io << colorize("]", :array)
+        end
       end
     end
   end
