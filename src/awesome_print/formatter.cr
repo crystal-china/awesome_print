@@ -25,6 +25,8 @@ module AwesomePrint
         Formatters::BytesFormatter.new(object, inspector).format
       when Enum
         Formatters::EnumFormatter.new(object, inspector).format
+      when Exception
+        Formatters::ExceptionFormatter.new(object, inspector).format
       when Dir
         Formatters::DirFormatter.new(object, inspector).format
       when File

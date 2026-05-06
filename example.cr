@@ -52,6 +52,7 @@ time_value = Time.utc(2026, 5, 6, 12, 34, 56)
 set_values = Set{1, 2, 3}
 tuple_values = {1, 2, 3}
 literal_values = [:alpha, nil, true, false]
+error_value = Exception.new("bad value", RuntimeError.new("root cause"))
 profile = {"name" => "Diana", "rank" => 1, "admin" => false}
 mixed_key_profile = {1 => "one", true => "yes", MixedKey.new(7) => "object"}
 composite_key_profile = {
@@ -81,6 +82,7 @@ ap!(time_value)
 ap!(set_values)
 ap!(tuple_values)
 ap!(literal_values)
+ap!(error_value)
 ap!(profile)
 ap!(mixed_key_profile)
 ap!(composite_key_profile)
