@@ -55,6 +55,7 @@ long_numbers = [1, 2, 3, 4, 5, 6, 7]
 nested_numbers = [1, [2, 3], 4]
 bytes_value = Bytes[65, 66, 67]
 slice_value = Slice[1, 2, 3]
+static_array_value = StaticArray[1, 2, 3]
 enum_value = DemoEnum::Alpha
 path_value = Path["foo/bar"]
 regex_value = /foo/i
@@ -90,6 +91,7 @@ ap!(long_numbers, limit: 5)
 ap!(nested_numbers)
 ap!(bytes_value)
 ap!(slice_value)
+ap!(static_array_value)
 ap!(enum_value)
 ap!(path_value)
 ap!(regex_value)

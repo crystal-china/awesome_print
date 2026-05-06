@@ -43,6 +43,8 @@ module AwesomePrint
         Formatters::TimeFormatter.new(object, inspector).format
       when Set
         Formatters::SetFormatter.new(object, inspector).format
+      when StaticArray
+        Formatters::StaticArrayFormatter.new(object, inspector).format
       when Tuple
         Formatters::TupleFormatter.new(object, inspector).format
       when Hash
