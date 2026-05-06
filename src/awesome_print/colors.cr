@@ -13,6 +13,7 @@ module AwesomePrint
       :string    => Colorize::ColorANSI::LightYellow,
       :symbol    => Colorize::ColorANSI::LightCyan,
       :number    => Colorize::ColorANSI::Blue,
+      :time      => Colorize::ColorANSI::LightGreen,
       :nilclass  => Colorize::ColorANSI::Red,
       :trueclass => Colorize::ColorANSI::Green,
       :falseclass => Colorize::ColorANSI::Red,
@@ -47,7 +48,7 @@ module AwesomePrint
       colored.toggle(enabled).to_s
     end
 
-    {% for name in [:array, :hash, :struct, :class, :variable, :string, :symbol, :number,
+    {% for name in [:array, :hash, :struct, :class, :variable, :string, :symbol, :number, :time,
                     :nilclass, :trueclass, :falseclass, :keyword,
                     :gray, :red, :green, :yellow, :blue, :purple, :cyan, :white,
                     :grayish, :redish, :greenish, :yellowish, :blueish, :purpleish,

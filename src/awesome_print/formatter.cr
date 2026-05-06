@@ -25,6 +25,8 @@ module AwesomePrint
         Formatters::RegexFormatter.new(object, inspector).format
       when Range
         Formatters::RangeFormatter.new(object, inspector).format
+      when Time
+        Formatters::TimeFormatter.new(object, inspector).format
       when Set
         Formatters::SetFormatter.new(object, inspector).format
       when Tuple

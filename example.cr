@@ -40,6 +40,7 @@ long_numbers = [1, 2, 3, 4, 5, 6, 7]
 nested_numbers = [1, [2, 3], 4]
 regex_value = /foo/i
 range_values = 1..5
+time_value = Time.utc(2026, 5, 6, 12, 34, 56)
 set_values = Set{1, 2, 3}
 tuple_values = {1, 2, 3}
 literal_values = [:alpha, nil, true, false]
@@ -65,6 +66,7 @@ ap!(long_numbers, limit: 5)
 ap!(nested_numbers)
 ap!(regex_value)
 ap!(range_values)
+ap!(time_value)
 ap!(set_values)
 ap!(tuple_values)
 ap!(literal_values)
