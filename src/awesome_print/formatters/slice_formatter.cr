@@ -26,7 +26,6 @@ module AwesomePrint
       end
 
       protected def empty_value : String
-        opening_token, closing_token = colored_label_wrapper(label)
         "#{opening_token}#{closing_token}"
       end
 
