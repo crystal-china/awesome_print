@@ -8,7 +8,13 @@ module AwesomePrint
       end
 
       def format : String
-        colorize(dir.inspect, :dir)
+        String.build do |io|
+          io << colorize("#<", :hash)
+          io << colorize("Dir", :class)
+          io << colorize(":", :hash)
+          io << colorize(dir.path, :string)
+          io << colorize(">", :hash)
+        end
       end
     end
   end

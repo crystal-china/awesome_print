@@ -8,7 +8,13 @@ module AwesomePrint
       end
 
       def format : String
-        colorize(file.inspect, :file)
+        String.build do |io|
+          io << colorize("#<", :hash)
+          io << colorize("File", :class)
+          io << colorize(":", :hash)
+          io << colorize(file.path, :string)
+          io << colorize(">", :hash)
+        end
       end
     end
   end
