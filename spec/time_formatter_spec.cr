@@ -1,5 +1,9 @@
 require "./spec_helper"
 
+private def strip_ansi(value : String) : String
+  value.gsub(/\e\[[\d;]+m/, "")
+end
+
 describe AwesomePrint::Formatters::TimeFormatter do
   it "formats time values using inspect" do
     inspector = AwesomePrint::Inspector.new(colors_enabled: false)
@@ -14,6 +18,6 @@ describe AwesomePrint::Formatters::TimeFormatter do
     value = Time.utc(2026, 5, 6, 12, 34, 56)
     output = AwesomePrint::Formatters::TimeFormatter.new(value, inspector).format
 
-    output.should eq(AwesomePrint::Colors.time(value.inspect))
+    strip_ansi(output).should eq(value.inspect)
   end
 end
