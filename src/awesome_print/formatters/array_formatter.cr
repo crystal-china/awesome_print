@@ -8,23 +8,23 @@ module AwesomePrint
       end
 
       def format : String
-        return colorize("[]", :array) if array.empty?
+        return empty_value if array.empty?
 
         if inspector.multiline
-          multiline_array
+          multiline_collection
         else
-          "#{colorize("[", :array)} #{array.map { |item| inspector.awesome(item) }.join(", ")} #{colorize("]", :array)}"
+          singleline_collection
         end
       end
 
-      private def multiline_array : String
+      private def multiline_collection : String
         data = generate_printable_array
         if should_be_limited?
           data = limited(data, width(array))
           separator_index = get_limit_size // 2
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
-        "#{colorize("[", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("]", :array)}"
+        "#{opening_token}\n#{data.join(",\n")}\n#{indent}#{closing_token}"
       end
 
       private def generate_printable_array : Array(String)
@@ -45,6 +45,22 @@ module AwesomePrint
 
       private def width(items : Array) : Int32
         (items.size - 1).to_s.size
+      end
+
+      protected def empty_value : String
+        colorize("[]", :array)
+      end
+
+      protected def opening_token : String
+        colorize("[", :array)
+      end
+
+      protected def closing_token : String
+        colorize("]", :array)
+      end
+
+      protected def singleline_collection : String
+        "#{opening_token} #{array.map { |item| inspector.awesome(item) }.join(", ")} #{closing_token}"
       end
     end
   end
