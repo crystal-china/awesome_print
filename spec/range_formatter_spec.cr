@@ -1,5 +1,9 @@
 require "./spec_helper"
 
+private def strip_ansi(value : String) : String
+  value.gsub(/\e\[[\d;]+m/, "")
+end
+
 describe AwesomePrint::Formatters::RangeFormatter do
   it "formats inclusive numeric ranges" do
     inspector = AwesomePrint::Inspector.new(colors_enabled: false)
@@ -20,5 +24,12 @@ describe AwesomePrint::Formatters::RangeFormatter do
     output = AwesomePrint::Formatters::RangeFormatter.new("a".."z", inspector).format
 
     output.should eq(%("a".."z"))
+  end
+
+  it "keeps range text stable when colors are enabled" do
+    inspector = AwesomePrint::Inspector.new
+    output = AwesomePrint::Formatters::RangeFormatter.new("a".."z", inspector).format
+
+    strip_ansi(output).should eq(%("a".."z"))
   end
 end
