@@ -21,6 +21,8 @@ module AwesomePrint
         Colors.apply(:string, object.inspect, inspector.colorize?)
       when Array
         Formatters::ArrayFormatter.new(object, inspector).format
+      when Enum
+        Formatters::EnumFormatter.new(object, inspector).format
       when Dir
         Formatters::DirFormatter.new(object, inspector).format
       when File
