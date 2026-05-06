@@ -27,11 +27,11 @@ module AwesomePrint
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
 
-        "#{object_prefix} #{colorize("{", :hash)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :hash)}#{object_suffix}"
+        "#{object_prefix} #{colorize("{", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :array)}#{object_suffix}"
       end
 
       private def single_line_object : String
-        "#{object_prefix} #{colorize("{", :hash)} #{single_line_field_lines.join(", ")} #{colorize("}", :hash)}#{object_suffix}"
+        "#{object_prefix} #{colorize("{", :array)} #{single_line_field_lines.join(", ")} #{colorize("}", :array)}#{object_suffix}"
       end
 
       private def field_lines : Array(String)

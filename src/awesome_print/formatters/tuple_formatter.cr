@@ -9,12 +9,12 @@ module AwesomePrint
 
       def format : String
         values = tuple.to_a
-        return colorize("{}", :hash) if values.empty?
+        return colorize("{}", :array) if values.empty?
 
         if inspector.multiline
           multiline_tuple(values)
         else
-          "#{colorize("{", :hash)} #{values.map { |item| inspector.awesome(item) }.join(", ")} #{colorize("}", :hash)}"
+          "#{colorize("{", :array)} #{values.map { |item| inspector.awesome(item) }.join(", ")} #{colorize("}", :array)}"
         end
       end
 
@@ -31,7 +31,7 @@ module AwesomePrint
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
 
-        "#{colorize("{", :hash)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :hash)}"
+        "#{colorize("{", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :array)}"
       end
 
       private def width(values : Array) : Int32
