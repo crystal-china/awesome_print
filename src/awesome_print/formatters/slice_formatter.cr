@@ -11,7 +11,7 @@ module AwesomePrint
         return empty_value if slice.empty?
 
         if inspector.multiline
-          multiline_slice
+          multiline_indexed_collection(slice, opening_token, closing_token)
         else
           "#{opening_token}#{formatted_values.join(", ")}#{closing_token}"
         end
@@ -35,29 +35,6 @@ module AwesomePrint
 
       protected def closing_token : String
         colorize("]", :array)
-      end
-
-      private def multiline_slice : String
-        data = generate_printable_slice
-        if should_be_limited?
-          data = limited(data, width(slice))
-          separator_index = get_limit_size // 2
-          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
-        end
-
-        "#{opening_token}\n#{data.join(",\n")}\n#{indent}#{closing_token}"
-      end
-
-      private def generate_printable_slice : Array(String)
-        slice.map_with_index do |item, index|
-          indented do
-            "#{indent}#{colorize("[#{index.to_s.rjust(width(slice))}] ", :array)}#{inspector.awesome(item)}"
-          end
-        end.to_a
-      end
-
-      private def width(items) : Int32
-        (items.size - 1).to_s.size
       end
     end
   end

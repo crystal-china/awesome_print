@@ -12,30 +12,10 @@ module AwesomePrint
         return colorize("{}", :array) if values.empty?
 
         if inspector.multiline
-          multiline_tuple(values)
+          multiline_indexed_collection(values, colorize("{", :array), colorize("}", :array))
         else
           "#{colorize("{", :array)} #{inline_values(values).join(", ")} #{colorize("}", :array)}"
         end
-      end
-
-      private def multiline_tuple(values : Array) : String
-        data = values.map_with_index do |item, index|
-          indented do
-            "#{indent}#{colorize("[#{index.to_s.rjust(width(values))}] ", :array)}#{inspector.awesome(item)}"
-          end
-        end
-
-        if should_be_limited?
-          data = limited(data, width(values))
-          separator_index = get_limit_size // 2
-          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
-        end
-
-        "#{colorize("{", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :array)}"
-      end
-
-      private def width(values : Array) : Int32
-        (values.size - 1).to_s.size
       end
 
       private def inline_values(values : Array) : Array(String)

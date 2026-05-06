@@ -63,6 +63,38 @@ module AwesomePrint
         data[0, head] + [".."] + data[-tail, tail]
       end
 
+      def multiline_indexed_collection(items, opening_token : String, closing_token : String) : String
+        data = indexed_collection_lines(items)
+        if should_be_limited?
+          data = limited(data, index_width(items.size))
+          separator_index = get_limit_size // 2
+          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
+        end
+
+        "#{opening_token}\n#{data.join(",\n")}\n#{indent}#{closing_token}"
+      end
+
+      def indexed_collection_lines(items) : Array(String)
+        width = index_width(items.size)
+        items.map_with_index do |item, index|
+          indented do
+            indexed_collection_prefix(index, width) + inspector.awesome(item)
+          end
+        end.to_a
+      end
+
+      def indexed_collection_prefix(index : Int32, width : Int32) : String
+        if inspector.index
+          indent + colorize("[#{index.to_s.rjust(width)}] ", :array)
+        else
+          indent
+        end
+      end
+
+      def index_width(size : Int32) : Int32
+        (size - 1).to_s.size
+      end
+
       def align(value : String, width : Int32) : String
         return value unless inspector.multiline
 
