@@ -13,7 +13,7 @@ module AwesomePrint
         if inspector.multiline
           multiline_hash
         else
-          "#{colorize("{", :array)} #{printable_hash.join(", ")} #{colorize("}", :array)}"
+          "#{colorize("{", :array)} #{limited_inline_values(printable_hash).join(", ")} #{colorize("}", :array)}"
         end
       end
 

@@ -54,6 +54,15 @@ module AwesomePrint
         temp
       end
 
+      def limited_inline_values(data : Array(String)) : Array(String)
+        limit = get_limit_size
+        return data if data.size <= limit
+
+        head = limit // 2
+        tail = head - ((limit - 1) % 2)
+        data[0, head] + [".."] + data[-tail, tail]
+      end
+
       def align(value : String, width : Int32) : String
         return value unless inspector.multiline
 

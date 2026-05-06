@@ -14,7 +14,7 @@ module AwesomePrint
         if inspector.multiline
           multiline_set(values)
         else
-          "#{colorize("(", :array)} #{values.map { |item| inspector.awesome(item) }.join(", ")} #{colorize(")", :array)}"
+          "#{colorize("(", :array)} #{inline_values(values).join(", ")} #{colorize(")", :array)}"
         end
       end
 
@@ -31,14 +31,14 @@ module AwesomePrint
 
         "#{colorize("(", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize(")", :array)}"
       end
-
       private def limited_values(data : Array(String)) : Array(String)
-        limit = get_limit_size
-        return data if data.size <= limit
+        limited_inline_values(data).map_with_index do |value, index|
+          value == ".." && index == get_limit_size // 2 ? "#{indent(inspector.indent_size)}.." : value
+        end
+      end
 
-        head = limit // 2
-        tail = head - ((limit - 1) % 2)
-        data[0, head] + ["#{indent(inspector.indent_size)}.."] + data[-tail, tail]
+      private def inline_values(values : Array) : Array(String)
+        limited_inline_values(values.map { |item| inspector.awesome(item) })
       end
     end
   end

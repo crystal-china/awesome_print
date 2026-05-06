@@ -14,7 +14,7 @@ module AwesomePrint
         if inspector.multiline
           multiline_tuple(values)
         else
-          "#{colorize("{", :array)} #{values.map { |item| inspector.awesome(item) }.join(", ")} #{colorize("}", :array)}"
+          "#{colorize("{", :array)} #{inline_values(values).join(", ")} #{colorize("}", :array)}"
         end
       end
 
@@ -36,6 +36,10 @@ module AwesomePrint
 
       private def width(values : Array) : Int32
         (values.size - 1).to_s.size
+      end
+
+      private def inline_values(values : Array) : Array(String)
+        limited_inline_values(values.map { |item| inspector.awesome(item) })
       end
     end
   end

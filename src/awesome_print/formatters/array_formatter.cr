@@ -60,7 +60,11 @@ module AwesomePrint
       end
 
       protected def singleline_collection : String
-        "#{opening_token} #{array.map { |item| inspector.awesome(item) }.join(", ")} #{closing_token}"
+        "#{opening_token} #{inline_values.join(", ")} #{closing_token}"
+      end
+
+      protected def inline_values : Array(String)
+        limited_inline_values(array.map { |item| inspector.awesome(item) })
       end
     end
   end

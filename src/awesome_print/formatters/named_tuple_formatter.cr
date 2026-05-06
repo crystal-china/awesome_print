@@ -13,7 +13,7 @@ module AwesomePrint
         if inspector.multiline
           multiline_named_tuple
         else
-          "#{colorize("{", :array)} #{printable_entries.join(", ")} #{colorize("}", :array)}"
+          "#{colorize("{", :array)} #{limited_inline_values(printable_entries).join(", ")} #{colorize("}", :array)}"
         end
       end
 

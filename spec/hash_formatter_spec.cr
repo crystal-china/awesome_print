@@ -53,6 +53,13 @@ TEXT
     output.should eq(%({ "a" => 2, "m" => 3, "z" => 1 }))
   end
 
+  it "applies output limiting to long single line hashes" do
+    inspector = AwesomePrint::Inspector.new(multiline: false, limit: 5, colors_enabled: false, order: :sorted)
+    output = AwesomePrint::Formatters::HashFormatter.new({"g" => 7, "b" => 2, "f" => 6, "a" => 1, "e" => 5, "c" => 3, "d" => 4}, inspector).format
+
+    output.should eq(%({ "a" => 1, "b" => 2, .., "f" => 6, "g" => 7 }))
+  end
+
   it "applies output limiting to long hashes" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, limit: 5, colors_enabled: false)
     output = AwesomePrint::Formatters::HashFormatter.new({:a => 1, :b => 2, :c => 3, :d => 4, :e => 5, :f => 6, :g => 7}, inspector).format

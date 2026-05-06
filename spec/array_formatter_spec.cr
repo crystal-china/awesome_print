@@ -25,6 +25,13 @@ TEXT
     output.should eq("[ 1, 2, 3 ]")
   end
 
+  it "applies output limiting to long single line arrays" do
+    inspector = AwesomePrint::Inspector.new(multiline: false, limit: 5, colors_enabled: false)
+    output = AwesomePrint::Formatters::ArrayFormatter.new([1, 2, 3, 4, 5, 6, 7], inspector).format
+
+    output.should eq("[ 1, 2, .., 6, 7 ]")
+  end
+
   it "applies output limiting to long arrays" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, limit: 5, colors_enabled: false)
     output = AwesomePrint::Formatters::ArrayFormatter.new([1, 2, 3, 4, 5, 6, 7], inspector).format
