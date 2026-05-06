@@ -38,6 +38,7 @@ end
 numbers = [1, 2, 3]
 long_numbers = [1, 2, 3, 4, 5, 6, 7]
 nested_numbers = [1, [2, 3], 4]
+range_values = 1..5
 set_values = Set{1, 2, 3}
 tuple_values = {1, 2, 3}
 literal_values = [:alpha, nil, true, false]
@@ -61,6 +62,7 @@ many_fields = ManyFields.new(1, 2, 3, 4, 5, 6, 7)
 ap!(numbers)
 ap!(long_numbers, limit: 5)
 ap!(nested_numbers)
+ap!(range_values)
 ap!(set_values)
 ap!(tuple_values)
 ap!(literal_values)
