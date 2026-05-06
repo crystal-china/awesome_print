@@ -83,6 +83,18 @@ describe AwesomePrint::Formatters::ExceptionFormatter do
     formatter.format_frame_for_test(project_frame).should_not eq(formatter.format_frame_for_test(runtime_frame))
   end
 
+  it "colors project frame path and location separately" do
+    inspector = AwesomePrint::Inspector.new
+    formatter = AwesomePrint::Formatters::ExceptionFormatter.new(ArgumentError.new("bad value"), inspector)
+    project_frame = "#{Dir.current}/spec/exception_formatter_spec.cr:12:34 in 'demo'"
+    colored = formatter.format_frame_for_test(project_frame)
+
+    strip_ansi(colored).should eq("spec/exception_formatter_spec.cr:12:34 in 'demo'")
+    colored.should contain(AwesomePrint::Colors.string("spec/exception_formatter_spec.cr"))
+    colored.should contain(AwesomePrint::Colors.number(":12:34"))
+    colored.should contain(AwesomePrint::Colors.hash(" in 'demo'"))
+  end
+
   it "deemphasizes /usr/lib and .cache frames instead of hiding them" do
     inspector = AwesomePrint::Inspector.new
     formatter = AwesomePrint::Formatters::ExceptionFormatter.new(ArgumentError.new("bad value"), inspector)

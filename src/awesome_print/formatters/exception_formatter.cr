@@ -61,7 +61,7 @@ module AwesomePrint
         else
           normalized = relative_frame(frame)
           if in_project_frame?(frame)
-            colorize(normalized, :string)
+            color_project_frame(normalized)
           elsif deemphasized_frame?(frame)
             colorize(normalized, :grayish)
           elsif in_runtime_frame?(frame)
@@ -69,6 +69,18 @@ module AwesomePrint
           else
             colorize(normalized, :pale)
           end
+        end
+      end
+
+      private def color_project_frame(frame : String) : String
+        if match = frame.match(/^(.+?)(:\d+:\d+)( in .+)?$/)
+          String.build do |io|
+            io << colorize(match[1], :string)
+            io << colorize(match[2], :number)
+            io << colorize(match[3]? || "", :hash)
+          end
+        else
+          colorize(frame, :string)
         end
       end
 
