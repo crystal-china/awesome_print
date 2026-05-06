@@ -23,4 +23,13 @@ describe AwesomePrint::Formatters::EnumFormatter do
 
     strip_ansi(output).should eq("DemoEnumForAwesomePrint::Alpha")
   end
+
+  it "colors enum class, separator, and value separately" do
+    inspector = AwesomePrint::Inspector.new
+    output = AwesomePrint::Formatters::EnumFormatter.new(DemoEnumForAwesomePrint::Alpha, inspector).format
+
+    output.should contain(AwesomePrint::Colors.class("DemoEnumForAwesomePrint"))
+    output.should contain(AwesomePrint::Colors.hash("::"))
+    output.should contain(AwesomePrint::Colors.symbol("Alpha"))
+  end
 end
