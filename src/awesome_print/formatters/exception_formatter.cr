@@ -20,7 +20,7 @@ module AwesomePrint
             frames.each do |frame|
               io << '\n'
               io << nested_indent(depth + 1)
-              io << colorize("from ", :hash)
+              io << colorize("from ", :keyword)
               io << format_frame(frame)
             end
           end
@@ -28,7 +28,7 @@ module AwesomePrint
           if cause = error.cause
             io << '\n'
             io << nested_indent(depth + 1)
-            io << colorize("caused by:", :hash)
+            io << colorize("caused by:", :keyword)
             io << '\n'
             io << indent_block(format_exception(cause, depth + 1), depth + 2)
           end
