@@ -8,11 +8,11 @@ module AwesomePrint
       end
 
       protected def empty_value : String
-        colorize("StaticArray[]", :class)
+        "#{colorize("StaticArray", :class)}#{colorize("[]", :array)}"
       end
 
       protected def opening_token : String
-        colorize("StaticArray[", :class)
+        "#{colorize("StaticArray", :class)}#{colorize("[", :array)}"
       end
 
       protected def singleline_collection : String

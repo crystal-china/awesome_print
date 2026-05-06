@@ -8,12 +8,12 @@ module AwesomePrint
       end
 
       def format : String
-        return colorize("#{label}[]", :class) if slice.empty?
+        return empty_value if slice.empty?
 
         if inspector.multiline
           multiline_slice
         else
-          "#{colorize("#{label}[", :class)}#{formatted_values.join(", ")}#{colorize("]", :array)}"
+          "#{opening_token}#{formatted_values.join(", ")}#{closing_token}"
         end
       end
 
@@ -25,6 +25,18 @@ module AwesomePrint
         limited_inline_values(slice.map { |item| inspector.awesome(item) }.to_a)
       end
 
+      protected def empty_value : String
+        "#{colorize(label, :class)}#{colorize("[]", :array)}"
+      end
+
+      protected def opening_token : String
+        "#{colorize(label, :class)}#{colorize("[", :array)}"
+      end
+
+      protected def closing_token : String
+        colorize("]", :array)
+      end
+
       private def multiline_slice : String
         data = generate_printable_slice
         if should_be_limited?
@@ -33,7 +45,7 @@ module AwesomePrint
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
         end
 
-        "#{colorize("#{label}[", :class)}\n#{data.join(",\n")}\n#{indent}#{colorize("]", :array)}"
+        "#{opening_token}\n#{data.join(",\n")}\n#{indent}#{closing_token}"
       end
 
       private def generate_printable_slice : Array(String)
