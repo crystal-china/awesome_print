@@ -37,4 +37,17 @@ describe AwesomePrint::Formatters::ObjectFormatter do
     output.should contain("@f = 6")
     output.should contain("@g = 7")
   end
+
+  it "applies limit to single line object fields" do
+    inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false, limit: 5)
+    object = ManyFieldsForAwesomePrint.new(1, 2, 3, 4, 5, 6, 7)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(object, inspector).format
+
+    output.should contain("@a = 1")
+    output.should contain("@b = 2")
+    output.should contain("..")
+    output.should contain("@f = 6")
+    output.should contain("@g = 7")
+    output.should_not contain("@c = 3, @d = 4, @e = 5")
+  end
 end

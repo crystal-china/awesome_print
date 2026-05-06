@@ -31,7 +31,7 @@ module AwesomePrint
       end
 
       private def single_line_object : String
-        "#{object_prefix} #{colorize("{", :array)} #{single_line_field_lines.join(", ")} #{colorize("}", :array)}#{object_suffix}"
+        "#{object_prefix} #{colorize("{", :array)} #{limited_inline_values(single_line_field_lines).join(", ")} #{colorize("}", :array)}#{object_suffix}"
       end
 
       private def field_lines : Array(String)

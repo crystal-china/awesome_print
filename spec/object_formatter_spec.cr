@@ -82,4 +82,14 @@ describe AwesomePrint::Formatters::ObjectFormatter do
     admin_index.should be < name_index
     name_index.should be < rank_index
   end
+
+  it "keeps sorted single line object output compact when limit is applied" do
+    inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false, order: :sorted, limit: 3)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false, "active"), inspector).format
+
+    output.should contain("@admin = false")
+    output.should contain("..")
+    output.should contain("@very_long_status = \"active\"")
+    output.should_not contain("\n")
+  end
 end
