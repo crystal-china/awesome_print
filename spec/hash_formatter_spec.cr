@@ -151,8 +151,8 @@ TEXT
       StructKeyForAwesomePrint.new(3, 4) => "struct",
     }, inspector).format
 
-    output.should contain("{1, 2} => \"tuple\"")
+    output.should contain("{ 1, 2 } => \"tuple\"")
     output.should contain("{ name: \"Diana\", rank: 1 } => \"named\"")
-    output.should contain("StructKeyForAwesomePrint(@x=3, @y=4) => \"struct\"")
+    output.should contain("StructKeyForAwesomePrint { @x = 3, @y = 4 } => \"struct\"")
   end
 end

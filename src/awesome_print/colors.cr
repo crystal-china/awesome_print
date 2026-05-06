@@ -6,12 +6,13 @@ module AwesomePrint
 
     COLORS = Hash(Symbol, Colorize::Color){
       :array     => Colorize::ColorANSI::White,
-      :hash      => Colorize::ColorANSI::DarkGray,
-      :class     => Colorize::ColorANSI::LightYellow,
-      :variable  => Colorize::ColorANSI::LightBlue,
-      :string    => Colorize::ColorANSI::Green,
-      :symbol    => Colorize::ColorANSI::Cyan,
-      :number    => Colorize::ColorANSI::Cyan,
+      :hash      => Colorize::ColorANSI::LightGray,
+      :struct    => Colorize::ColorANSI::LightGray,
+      :class     => Colorize::ColorANSI::Yellow,
+      :variable  => Colorize::ColorANSI::LightCyan,
+      :string    => Colorize::ColorANSI::LightYellow,
+      :symbol    => Colorize::ColorANSI::LightCyan,
+      :number    => Colorize::ColorANSI::Blue,
       :nilclass  => Colorize::ColorANSI::Red,
       :trueclass => Colorize::ColorANSI::Green,
       :falseclass => Colorize::ColorANSI::Red,
@@ -42,11 +43,11 @@ module AwesomePrint
       return value unless color
 
       colored = value.colorize(color)
-      colored = colored.mode(:bold) if name == :array
+      colored = colored.mode(:bold) if name == :array || name == :number
       colored.toggle(enabled).to_s
     end
 
-    {% for name in [:array, :hash, :class, :variable, :string, :symbol, :number,
+    {% for name in [:array, :hash, :struct, :class, :variable, :string, :symbol, :number,
                     :nilclass, :trueclass, :falseclass, :keyword,
                     :gray, :red, :green, :yellow, :blue, :purple, :cyan, :white,
                     :grayish, :redish, :greenish, :yellowish, :blueish, :purpleish,

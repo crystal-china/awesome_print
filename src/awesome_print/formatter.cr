@@ -21,6 +21,8 @@ module AwesomePrint
         Colors.apply(:string, object.inspect, inspector.colorize?)
       when Array
         Formatters::ArrayFormatter.new(object, inspector).format
+      when Tuple
+        Formatters::TupleFormatter.new(object, inspector).format
       when Hash
         Formatters::HashFormatter.new(object, inspector).format
       when NamedTuple
