@@ -95,6 +95,13 @@ module AwesomePrint
         (size - 1).to_s.size
       end
 
+      def colored_label_wrapper(label : String, opening : String = "[", closing : String = "]") : {String, String}
+        {
+          "#{colorize(label, :class)}#{colorize(opening, :array)}",
+          colorize(closing, :array),
+        }
+      end
+
       def align(value : String, width : Int32) : String
         return value unless inspector.multiline
 

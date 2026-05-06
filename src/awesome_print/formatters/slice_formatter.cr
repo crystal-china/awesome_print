@@ -26,15 +26,16 @@ module AwesomePrint
       end
 
       protected def empty_value : String
-        "#{colorize(label, :class)}#{colorize("[]", :array)}"
+        opening_token, closing_token = colored_label_wrapper(label)
+        "#{opening_token}#{closing_token}"
       end
 
       protected def opening_token : String
-        "#{colorize(label, :class)}#{colorize("[", :array)}"
+        colored_label_wrapper(label)[0]
       end
 
       protected def closing_token : String
-        colorize("]", :array)
+        colored_label_wrapper(label)[1]
       end
     end
   end

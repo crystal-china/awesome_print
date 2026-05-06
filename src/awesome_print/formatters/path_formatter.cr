@@ -8,12 +8,8 @@ module AwesomePrint
       end
 
       def format : String
-        String.build do |io|
-          io << colorize("Path", :class)
-          io << colorize("[", :array)
-          io << inspector.awesome(path.to_s)
-          io << colorize("]", :array)
-        end
+        opening_token, closing_token = colored_label_wrapper("Path")
+        "#{opening_token}#{inspector.awesome(path.to_s)}#{closing_token}"
       end
     end
   end
