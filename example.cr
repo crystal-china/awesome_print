@@ -84,6 +84,14 @@ ap!(numbers.size + user[:rank])
 ap!(person, order: :sorted)
 ap!(numbers, multiline: false)
 
+File.tempfile("awesome-print-demo") do |file|
+  ap!(file)
+end
+
+dir_value = Dir.new(".")
+ap!(dir_value)
+dir_value.close
+
 puts
 # Keep one no-color baseline sample for structure-only comparisons.
 puts "-- custom inspector: natural order --"

@@ -9,6 +9,8 @@ module AwesomePrint
       :hash      => Colorize::ColorANSI::LightGray,
       :struct    => Colorize::ColorANSI::LightGray,
       :class     => Colorize::ColorANSI::Yellow,
+      :file      => Colorize::ColorANSI::LightYellow,
+      :dir       => Colorize::ColorANSI::LightYellow,
       :variable  => Colorize::ColorANSI::LightCyan,
       :string    => Colorize::ColorANSI::LightYellow,
       :symbol    => Colorize::ColorANSI::LightCyan,
@@ -48,7 +50,7 @@ module AwesomePrint
       colored.toggle(enabled).to_s
     end
 
-    {% for name in [:array, :hash, :struct, :class, :variable, :string, :symbol, :number, :time,
+    {% for name in [:array, :hash, :struct, :class, :file, :dir, :variable, :string, :symbol, :number, :time,
                     :nilclass, :trueclass, :falseclass, :keyword,
                     :gray, :red, :green, :yellow, :blue, :purple, :cyan, :white,
                     :grayish, :redish, :greenish, :yellowish, :blueish, :purpleish,

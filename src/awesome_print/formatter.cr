@@ -21,6 +21,10 @@ module AwesomePrint
         Colors.apply(:string, object.inspect, inspector.colorize?)
       when Array
         Formatters::ArrayFormatter.new(object, inspector).format
+      when Dir
+        Formatters::DirFormatter.new(object, inspector).format
+      when File
+        Formatters::FileFormatter.new(object, inspector).format
       when Path
         Formatters::PathFormatter.new(object, inspector).format
       when Regex
