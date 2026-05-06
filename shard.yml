@@ -1,11 +1,11 @@
 name: awesome_print
 version: 0.1.0
 
-# authors:
-#   - name <email@example.com>
+authors:
+  - Billy.Zheng
 
-# description: |
-#   Short description of awesome_print
+description: |
+  A Crystal pretty-printer with an ap! macro and awesome_print-style output.
 
 # dependencies:
 #   pg:
@@ -16,4 +16,4 @@ version: 0.1.0
 #   webmock:
 #     github: manastech/webmock.cr
 
-# license: MIT
+license: MIT
