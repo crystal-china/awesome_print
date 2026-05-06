@@ -86,32 +86,46 @@ recursive_person = RecursivePerson.new("Diana")
 recursive_person.friend = recursive_person
 many_fields = ManyFields.new(1, 2, 3, 4, 5, 6, 7)
 
+puts "-- collections --"
 ap!(numbers)
 ap!(long_numbers, limit: 5)
 ap!(nested_numbers)
+ap!(set_values)
+ap!(tuple_values)
+ap!(profile)
+ap!(user)
+
+puts
+puts "-- collection variants --"
 ap!(bytes_value)
 ap!(slice_value)
 ap!(static_array_value)
+ap!(mixed_key_profile)
+ap!(composite_key_profile)
+
+puts
+puts "-- objects --"
+ap!(StructKey.new(3, 4))
+ap!(person)
+ap!(recursive_person)
+ap!(many_fields, limit: 5)
+ap!(person, order: :sorted)
+
+puts
+puts "-- single line --"
+ap!(numbers, multiline: false)
+ap!(profile, multiline: false, limit: 5, order: :sorted)
+ap!(person, multiline: false, order: :sorted, limit: 3)
+
+puts
+puts "-- scalar and special values --"
+ap!(literal_values)
 ap!(enum_value)
 ap!(path_value)
 ap!(regex_value)
 ap!(range_values)
 ap!(time_value)
-ap!(set_values)
-ap!(tuple_values)
-ap!(literal_values)
-ap!(error_value)
-ap!(profile)
-ap!(mixed_key_profile)
-ap!(composite_key_profile)
-ap!(user)
-ap!(StructKey.new(3, 4))
-ap!(person)
-ap!(recursive_person)
-ap!(many_fields, limit: 5)
 ap!(numbers.size + user[:rank])
-ap!(person, order: :sorted)
-ap!(numbers, multiline: false)
 
 File.tempfile("awesome-print-demo") do |file|
   ap!(file)
@@ -120,6 +134,10 @@ end
 dir_value = Dir.new(".")
 ap!(dir_value)
 dir_value.close
+
+puts
+puts "-- exception --"
+ap!(error_value)
 
 puts
 # Keep one no-color baseline sample for structure-only comparisons.
