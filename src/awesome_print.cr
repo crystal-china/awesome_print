@@ -1,9 +1,12 @@
+require "set"
+
 require "./version"
 require "./awesome_print/colors"
 require "./awesome_print/inspector"
 require "./awesome_print/formatter"
 require "./awesome_print/formatters/base_formatter"
 require "./awesome_print/formatters/array_formatter"
+require "./awesome_print/formatters/set_formatter"
 require "./awesome_print/formatters/tuple_formatter"
 require "./awesome_print/formatters/hash_formatter"
 require "./awesome_print/formatters/named_tuple_formatter"

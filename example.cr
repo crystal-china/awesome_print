@@ -38,6 +38,7 @@ end
 numbers = [1, 2, 3]
 long_numbers = [1, 2, 3, 4, 5, 6, 7]
 nested_numbers = [1, [2, 3], 4]
+set_values = Set{1, 2, 3}
 tuple_values = {1, 2, 3}
 literal_values = [:alpha, nil, true, false]
 profile = {"name" => "Diana", "rank" => 1, "admin" => false}
@@ -60,6 +61,7 @@ many_fields = ManyFields.new(1, 2, 3, 4, 5, 6, 7)
 ap!(numbers)
 ap!(long_numbers, limit: 5)
 ap!(nested_numbers)
+ap!(set_values)
 ap!(tuple_values)
 ap!(literal_values)
 ap!(profile)
