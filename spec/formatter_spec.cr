@@ -18,6 +18,12 @@ describe AwesomePrint::Formatter do
     formatter.format(false).should eq(AwesomePrint::Colors.falseclass("false"))
   end
 
+  it "dispatches class objects to the class formatter" do
+    formatter = AwesomePrint::Formatter.new(AwesomePrint::Inspector.new(colors_enabled: false))
+
+    formatter.format(String).should eq("String")
+  end
+
   it "formats hash-like objects through to_h by default" do
     formatter = AwesomePrint::Formatter.new(AwesomePrint::Inspector.new(colors_enabled: false, indent_size: 2))
 
