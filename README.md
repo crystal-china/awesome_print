@@ -51,6 +51,9 @@ If you want the formatted text without printing, use:
 text = AwesomePrint.format(user)
 ```
 
+`AwesomePrint.format(...)` returns plain text by default.
+Pass `colors_enabled: true` if you want ANSI colors in the returned string.
+
 ### Options
 
 `ap!` forwards named arguments into `AwesomePrint::Inspector.new(...)`.
@@ -108,6 +111,7 @@ String output without printing:
 
 ```crystal
 text = AwesomePrint.format(user, multiline: false)
+colored = AwesomePrint.format(user, multiline: false, colors_enabled: true)
 ```
 
 ### Supported formatters

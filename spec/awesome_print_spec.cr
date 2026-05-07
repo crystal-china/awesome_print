@@ -108,10 +108,16 @@ describe AwesomePrint do
     io = IO::Memory.new
     AwesomePrint.output = io
 
-    output = AwesomePrint.format([1, 2, 3], multiline: false, colors_enabled: false)
+    output = AwesomePrint.format([1, 2, 3], multiline: false)
 
     output.should eq("[ 1, 2, 3 ]")
     io.to_s.should eq("")
+  end
+
+  it "returns plain text by default when using AwesomePrint.format" do
+    output = AwesomePrint.format([1, 2, 3])
+
+    output.should eq("[\n    [0] 1,\n    [1] 2,\n    [2] 3\n]")
   end
 
   it "accepts an explicit inspector when using AwesomePrint.format" do
@@ -120,5 +126,12 @@ describe AwesomePrint do
     output = AwesomePrint.format({"z" => 1, "a" => 2}, inspector)
 
     output.should eq(%({ "a" => 2, "z" => 1 }))
+  end
+
+  it "allows colors to be explicitly enabled for AwesomePrint.format" do
+    output = AwesomePrint.format([1, 2, 3], multiline: false, colors_enabled: true)
+
+    output.should_not eq("[ 1, 2, 3 ]")
+    strip_ansi(output).should eq("[ 1, 2, 3 ]")
   end
 end
