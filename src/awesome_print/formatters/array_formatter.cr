@@ -34,7 +34,7 @@ module AwesomePrint
       end
 
       protected def inline_values : Array(String)
-        limited_inline_values(array.map { |item| inspector.awesome(item) })
+        inline_collection_values(array)
       end
     end
   end

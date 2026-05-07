@@ -22,7 +22,7 @@ module AwesomePrint
       end
 
       protected def formatted_values : Array(String)
-        limited_inline_values(slice.map { |item| inspector.awesome(item) }.to_a)
+        inline_collection_values(slice)
       end
 
       protected def empty_value : String

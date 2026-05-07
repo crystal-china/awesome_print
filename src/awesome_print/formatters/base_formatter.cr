@@ -41,8 +41,7 @@ module AwesomePrint
         limit = get_limit_size
         return data if data.size <= limit
 
-        head = limit // 2
-        tail = head - ((limit - 1) % 2)
+        head, tail = limited_partition_counts(limit)
         temp = data[0, head] + [String.new] + data[-tail, tail]
 
         temp[head] = if is_hash
@@ -58,29 +57,62 @@ module AwesomePrint
         limit = get_limit_size
         return data if data.size <= limit
 
-        head = limit // 2
-        tail = head - ((limit - 1) % 2)
+        head, tail = limited_partition_counts(limit)
         data[0, head] + [".."] + data[-tail, tail]
       end
 
       def multiline_indexed_collection(items, opening_token : String, closing_token : String) : String
         data = indexed_collection_lines(items)
-        if should_be_limited?
-          data = limited(data, index_width(items.size))
-          separator_index = get_limit_size // 2
-          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
-        end
 
         "#{opening_token}\n#{data.join(",\n")}\n#{indent}#{closing_token}"
       end
 
       def indexed_collection_lines(items) : Array(String)
         width = index_width(items.size)
-        items.map_with_index do |item, index|
-          indented do
-            indexed_collection_prefix(index, width) + inspector.awesome(item)
+        if partition = limited_partition(items.size)
+          head, tail = partition
+          data = Array(String).new(head + tail + 1)
+
+          head.times do |index|
+            data << formatted_indexed_item(items[index], index, width)
           end
-        end.to_a
+
+          data << indented do
+            "#{indent}[#{head.to_s.rjust(width)}] .. [#{items.size - tail - 1}]"
+          end
+
+          tail.times do |offset|
+            index = items.size - tail + offset
+            data << formatted_indexed_item(items[index], index, width)
+          end
+
+          data
+        else
+          items.map_with_index do |item, index|
+            formatted_indexed_item(item, index, width)
+          end.to_a
+        end
+      end
+
+      def inline_collection_values(items) : Array(String)
+        if partition = limited_partition(items.size)
+          head, tail = partition
+          data = Array(String).new(head + tail + 1)
+
+          head.times do |index|
+            data << inspector.awesome(items[index])
+          end
+
+          data << ".."
+
+          tail.times do |offset|
+            data << inspector.awesome(items[items.size - tail + offset])
+          end
+
+          data
+        else
+          items.map { |item| inspector.awesome(item) }.to_a
+        end
       end
 
       def indexed_collection_prefix(index : Int32, width : Int32) : String
@@ -93,6 +125,25 @@ module AwesomePrint
 
       def index_width(size : Int32) : Int32
         (size - 1).to_s.size
+      end
+
+      private def formatted_indexed_item(item, index : Int32, width : Int32) : String
+        indented do
+          indexed_collection_prefix(index, width) + inspector.awesome(item)
+        end
+      end
+
+      private def limited_partition(size : Int32) : {Int32, Int32}?
+        return unless should_be_limited?
+        return unless size > get_limit_size
+
+        limited_partition_counts(get_limit_size)
+      end
+
+      private def limited_partition_counts(limit : Int32) : {Int32, Int32}
+        head = limit // 2
+        tail = head - ((limit - 1) % 2)
+        {head, tail}
       end
 
       def colored_label_wrapper(label : String, opening : String = "[", closing : String = "]") : {String, String}
