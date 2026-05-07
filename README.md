@@ -52,6 +52,7 @@ text = AwesomePrint.format(user)
 
 `AwesomePrint.format(...)` returns plain text by default.
 Pass `colors_enabled: true` if you want ANSI colors in the returned string.
+`ap!` still prints with colors by default.
 
 ### Options
 
@@ -63,10 +64,12 @@ Currently supported options:
 - `multiline : Bool = true`
 - `index : Bool = true`
 - `limit : Int32? = nil`
+- `raw : Bool = false`
 - `colors_enabled : Bool = true`
 - `show_backtrace : Bool = true`
 - `backtrace_limit : Int32 = 8`
 - `order : AwesomePrint::Inspector::Order = :natural`
+- `hash_format : AwesomePrint::Inspector::HashFormat = :symbol`
 
 These are also the defaults used by `ap!` and `AwesomePrint.format(...)`, unless you override them explicitly.
 
@@ -84,11 +87,25 @@ Limited output:
 ap!([1, 2, 3, 4, 5, 6, 7], limit: 5)
 ```
 
+Hash output styles:
+
+```crystal
+ap!(user_hash, hash_format: :symbol)
+ap!(user_hash, hash_format: :rocket)
+ap!(user_hash, hash_format: :json)
+```
+
 Sorted object fields:
 
 ```crystal
 person = Person.new("Diana", 1, false, "active")
 ap!(person, order: :sorted)
+```
+
+Raw object output:
+
+```crystal
+ap!(user_view, raw: true)
 ```
 
 Backtrace control:
@@ -112,12 +129,32 @@ text = AwesomePrint.format(user, multiline: false)
 colored = AwesomePrint.format(user, multiline: false, colors_enabled: true)
 ```
 
+Hash-like objects with `to_h`:
+
+```crystal
+class UserView
+  def initialize(@name : String, @rank : Int32)
+  end
+
+  def to_h
+    {name: @name, rank: @rank}
+  end
+end
+
+AwesomePrint.format(UserView.new("Diana", 1))
+# => formats as a mapping by default
+
+AwesomePrint.format(UserView.new("Diana", 1), raw: true)
+# => formats as an object with instance variables
+```
+
 ### Supported formatters
 
 Current custom formatters cover:
 
 - `Array`
 - `Bytes`
+- `Class`
 - `Slice`
 - `StaticArray`
 - `Set`
@@ -134,6 +171,12 @@ Current custom formatters cover:
 - `Regex`
 - `Range`
 - `Time`
+
+Notes:
+
+- `Hash` and `NamedTuple` support `hash_format: :symbol | :rocket | :json`
+- objects that respond to `to_h` and return `Hash` or `NamedTuple` are formatted as mappings by default
+- `raw: true` forces those objects back onto the normal object formatter path
 
 ### Preview script
 
