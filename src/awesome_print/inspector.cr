@@ -37,6 +37,7 @@ module AwesomePrint
     )
       @current_indentation = 0
       @seen_object_ids = [] of UInt64
+      @formatter = nil
     end
 
     def increase_indentation(&)
@@ -58,13 +59,13 @@ module AwesomePrint
         else
           begin
             @seen_object_ids << object.object_id
-            Formatter.new(self).format(object)
+            formatter.format(object)
           ensure
             @seen_object_ids.pop
           end
         end
       else
-        Formatter.new(self).format(object)
+        formatter.format(object)
       end
     end
 
@@ -76,13 +77,13 @@ module AwesomePrint
         else
           begin
             @seen_object_ids << object.object_id
-            Formatter.new(self).write(object, io)
+            formatter.write(object, io)
           ensure
             @seen_object_ids.pop
           end
         end
       else
-        Formatter.new(self).write(object, io)
+        formatter.write(object, io)
       end
     end
 
@@ -92,6 +93,10 @@ module AwesomePrint
 
     def recursive_reference?(object) : Bool
       object.is_a?(Reference) && recursive?(object)
+    end
+
+    private def formatter : Formatter
+      @formatter ||= Formatter.new(self)
     end
 
     private def nested(object : Reference) : String
