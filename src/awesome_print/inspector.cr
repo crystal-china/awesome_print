@@ -10,6 +10,7 @@ module AwesomePrint
     getter multiline : Bool
     getter index : Bool
     getter limit : Int32?
+    getter raw : Bool
     getter colors_enabled : Bool
     getter show_backtrace : Bool
     getter backtrace_limit : Int32
@@ -20,6 +21,7 @@ module AwesomePrint
       @multiline : Bool = true,
       @index : Bool = true,
       @limit : Int32? = nil,
+      @raw : Bool = false,
       @colors_enabled : Bool = true,
       @show_backtrace : Bool = true,
       @backtrace_limit : Int32 = 8,

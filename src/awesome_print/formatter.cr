@@ -54,7 +54,23 @@ module AwesomePrint
       when Struct
         Formatters::StructFormatter.new(object, inspector).format
       else
-        Formatters::ObjectFormatter.new(object, inspector).format
+        if !inspector.raw && (mapping = convert_to_mapping(object))
+          format(mapping)
+        else
+          Formatters::ObjectFormatter.new(object, inspector).format
+        end
+      end
+    end
+
+    private def convert_to_mapping(object)
+      return unless object.responds_to?(:to_h)
+
+      mapping = object.to_h
+      case mapping
+      when Hash, NamedTuple
+        mapping
+      else
+        nil
       end
     end
   end
