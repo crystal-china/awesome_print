@@ -11,22 +11,10 @@ module AwesomePrint
         return colorize("{}", :array) if named_tuple.empty?
 
         if inspector.multiline
-          multiline_named_tuple
+          multiline_braced_mapping(printable_entries, left_width(printable_keys))
         else
-          "#{colorize("{", :array)} #{limited_inline_values(printable_entries).join(", ")} #{colorize("}", :array)}"
+          singleline_braced_collection(printable_entries)
         end
-      end
-
-      private def multiline_named_tuple : String
-        data = printable_entries
-
-        if should_be_limited?
-          data = limited(data, left_width(printable_keys), true)
-          separator_index = get_limit_size // 2
-          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
-        end
-
-        "#{colorize("{", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :array)}"
       end
 
       private def printable_entries : Array(String)

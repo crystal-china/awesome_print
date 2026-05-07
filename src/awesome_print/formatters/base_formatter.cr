@@ -102,6 +102,20 @@ module AwesomePrint
         }
       end
 
+      def singleline_braced_collection(data : Array(String)) : String
+        "#{colorize("{", :array)} #{limited_inline_values(data).join(", ")} #{colorize("}", :array)}"
+      end
+
+      def multiline_braced_mapping(data : Array(String), width : Int32) : String
+        if should_be_limited?
+          data = limited(data, width, true)
+          separator_index = get_limit_size // 2
+          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
+        end
+
+        "#{colorize("{", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :array)}"
+      end
+
       def align(value : String, width : Int32) : String
         return value unless inspector.multiline
 

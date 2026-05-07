@@ -11,22 +11,10 @@ module AwesomePrint
         return colorize("{}", :array) if hash.empty?
 
         if inspector.multiline
-          multiline_hash
+          multiline_braced_mapping(printable_hash, left_width(printable_keys))
         else
-          "#{colorize("{", :array)} #{limited_inline_values(printable_hash).join(", ")} #{colorize("}", :array)}"
+          singleline_braced_collection(printable_hash)
         end
-      end
-
-      private def multiline_hash : String
-        data = printable_hash
-
-        if should_be_limited?
-          data = limited(data, left_width(printable_keys), true)
-          separator_index = get_limit_size // 2
-          data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"
-        end
-
-        "#{colorize("{", :array)}\n#{data.join(",\n")}\n#{indent}#{colorize("}", :array)}"
       end
 
       private def printable_hash : Array(String)
