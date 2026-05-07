@@ -5,6 +5,12 @@ module AwesomePrint
       Sorted
     end
 
+    enum HashFormat
+      Symbol
+      Rocket
+      Json
+    end
+
     getter indent_size : Int32
     getter current_indentation : Int32
     getter multiline : Bool
@@ -15,6 +21,7 @@ module AwesomePrint
     getter show_backtrace : Bool
     getter backtrace_limit : Int32
     getter order : Order
+    getter hash_format : HashFormat
 
     def initialize(
       @indent_size : Int32 = 4,
@@ -25,7 +32,8 @@ module AwesomePrint
       @colors_enabled : Bool = true,
       @show_backtrace : Bool = true,
       @backtrace_limit : Int32 = 8,
-      @order : Order = :natural
+      @order : Order = :natural,
+      @hash_format : HashFormat = :symbol
     )
       @current_indentation = 0
       @seen_object_ids = [] of UInt64

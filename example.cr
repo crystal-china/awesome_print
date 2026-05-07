@@ -70,6 +70,7 @@ rescue ex
   ex
 end
 profile = {"name" => "Diana", "rank" => 1, "admin" => false}
+format_profile = {"id" => 1, "display_name" => "Diana", "very_long_profile_key" => true}
 mixed_key_profile = {1 => "one", true => "yes", MixedKey.new(7) => "object"}
 composite_key_profile = {
   {1, 2} => "tuple",
@@ -80,6 +81,11 @@ user = {
   name: "Diana",
   rank: 1,
   admin: false,
+}
+format_user = {
+  id: 1,
+  display_name: "Diana",
+  very_long_profile_key: true,
 }
 person = Person.new("Diana", 1, false, "active")
 recursive_person = RecursivePerson.new("Diana")
@@ -94,6 +100,15 @@ ap!(set_values)
 ap!(tuple_values)
 ap!(profile)
 ap!(user)
+
+puts
+puts "-- hash formats --"
+ap!(format_profile)
+ap!(format_profile, hash_format: :rocket)
+ap!(format_profile, hash_format: :json)
+ap!(format_user)
+ap!(format_user, hash_format: :rocket)
+ap!(format_user, hash_format: :json)
 
 puts
 puts "-- collection variants --"

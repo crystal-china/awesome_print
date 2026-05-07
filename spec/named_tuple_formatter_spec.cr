@@ -20,6 +20,24 @@ TEXT
     output.should eq(%({ name: "Diana", rank: 1 }))
   end
 
+  it "formats named tuples with rockets when hash_format is rocket" do
+    inspector = AwesomePrint::Inspector.new(colors_enabled: false, hash_format: :rocket)
+    output = AwesomePrint::Formatters::NamedTupleFormatter.new({id: 1, display_name: "Diana"}, inspector).format
+
+    output.should contain(":id => 1")
+    output.should contain(":display_name => \"Diana\"")
+    output.index(":id => 1").not_nil!.should be < output.index(":display_name => \"Diana\"").not_nil!
+  end
+
+  it "formats named tuples with json colons when hash_format is json" do
+    inspector = AwesomePrint::Inspector.new(colors_enabled: false, hash_format: :json)
+    output = AwesomePrint::Formatters::NamedTupleFormatter.new({id: 1, display_name: "Diana"}, inspector).format
+
+    output.should contain("\"id\": 1")
+    output.should contain("\"display_name\": \"Diana\"")
+    output.index("\"id\": 1").not_nil!.should be < output.index("\"display_name\": \"Diana\"").not_nil!
+  end
+
   it "keeps sorted single line named tuples compact" do
     inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false, order: :sorted)
     output = AwesomePrint::Formatters::NamedTupleFormatter.new({z: 1, a: 2, m: 3}, inspector).format
