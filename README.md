@@ -45,6 +45,12 @@ If you instantiate `AwesomePrint::Inspector` yourself, the class default is `ind
 
 When given multiple expressions, `ap!` prints each one and returns them as a tuple.
 
+If you want the formatted text without printing, use:
+
+```crystal
+text = AwesomePrint.format(user)
+```
+
 ### Options
 
 `ap!` forwards named arguments into `AwesomePrint::Inspector.new(...)`.
@@ -96,6 +102,12 @@ Multiple expressions:
 
 ```crystal
 value1, value2 = ap!(user.id, user.name)
+```
+
+String output without printing:
+
+```crystal
+text = AwesomePrint.format(user, multiline: false)
 ```
 
 ### Supported formatters

@@ -103,4 +103,22 @@ describe AwesomePrint do
     output.should contain("[ 3, 1, 2 ]")
     output.should contain(%({ "a" => 2, "z" => 1 }))
   end
+
+  it "returns a formatted string without printing when using AwesomePrint.format" do
+    io = IO::Memory.new
+    AwesomePrint.output = io
+
+    output = AwesomePrint.format([1, 2, 3], multiline: false, colors_enabled: false)
+
+    output.should eq("[ 1, 2, 3 ]")
+    io.to_s.should eq("")
+  end
+
+  it "accepts an explicit inspector when using AwesomePrint.format" do
+    inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false, order: :sorted)
+
+    output = AwesomePrint.format({"z" => 1, "a" => 2}, inspector)
+
+    output.should eq(%({ "a" => 2, "z" => 1 }))
+  end
 end
