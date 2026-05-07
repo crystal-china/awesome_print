@@ -40,8 +40,7 @@ ap!(user)
 
 and then returns the original value, so it can stay inside expressions.
 
-When you call `ap!`, it builds an `AwesomePrint::Inspector` with `indent_size: 2` by default.
-If you instantiate `AwesomePrint::Inspector` yourself, the class default is `indent_size: 4`.
+By default, `ap!`, `AwesomePrint.format(...)`, and `AwesomePrint::Inspector.new` all use `indent_size: 4`.
 
 When given multiple expressions, `ap!` prints each one and returns them as a tuple.
 
@@ -69,8 +68,7 @@ Currently supported options:
 - `backtrace_limit : Int32 = 8`
 - `order : AwesomePrint::Inspector::Order = :natural`
 
-These are `Inspector` defaults.
-`ap!` overrides only `indent_size`, using `2` unless you pass your own value.
+These are also the defaults used by `ap!` and `AwesomePrint.format(...)`, unless you override them explicitly.
 
 ### Examples
 

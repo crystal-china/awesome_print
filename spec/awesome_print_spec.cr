@@ -120,6 +120,18 @@ describe AwesomePrint do
     output.should eq("[\n    [0] 1,\n    [1] 2,\n    [2] 3\n]")
   end
 
+  it "uses the same default indentation for ap! and AwesomePrint.format" do
+    io = IO::Memory.new
+    AwesomePrint.output = io
+
+    ap!([1, 2, 3])
+    ap_output = strip_ansi(io.to_s)
+    formatted = AwesomePrint.format([1, 2, 3])
+
+    ap_output.should contain("[\n    [0] 1,\n    [1] 2,\n    [2] 3\n]")
+    formatted.should eq("[\n    [0] 1,\n    [1] 2,\n    [2] 3\n]")
+  end
+
   it "accepts an explicit inspector when using AwesomePrint.format" do
     inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false, order: :sorted)
 

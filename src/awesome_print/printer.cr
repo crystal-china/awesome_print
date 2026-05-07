@@ -9,7 +9,7 @@ module AwesomePrint
     format(value, Inspector.new(**{colors_enabled: false}.merge(options)))
   end
 
-  def self.print(*, expression : String, value, file : String, line : Int32, inspector : Inspector = Inspector.new(indent_size: 2))
+  def self.print(*, expression : String, value, file : String, line : Int32, inspector : Inspector = Inspector.new(indent_size: 4))
     rendered_value = pretty(value, inspector)
     rendered_type = typeof(value).to_s
 
