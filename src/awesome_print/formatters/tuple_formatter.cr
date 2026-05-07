@@ -18,6 +18,20 @@ module AwesomePrint
         end
       end
 
+      def write(io : IO) : Nil
+        values = tuple.to_a
+        if values.empty?
+          io << colorize("{}", :array)
+          return
+        end
+
+        if inspector.multiline
+          write_multiline_indexed_collection(io, values, colorize("{", :array), colorize("}", :array))
+        else
+          write_inline_collection(io, values, colorize("{", :array), colorize("}", :array))
+        end
+      end
+
       private def inline_values(values : Array) : Array(String)
         inline_collection_values(values)
       end

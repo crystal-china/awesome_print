@@ -17,6 +17,19 @@ module AwesomePrint
         end
       end
 
+      def write(io : IO) : Nil
+        if array.empty?
+          io << empty_value
+          return
+        end
+
+        if inspector.multiline
+          write_multiline_indexed_collection(io, array, opening_token, closing_token)
+        else
+          write_inline_collection(io, array, opening_token, closing_token)
+        end
+      end
+
       protected def empty_value : String
         colorize("[]", :array)
       end

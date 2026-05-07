@@ -17,6 +17,19 @@ module AwesomePrint
         end
       end
 
+      def write(io : IO) : Nil
+        if slice.empty?
+          io << empty_value
+          return
+        end
+
+        if inspector.multiline
+          write_multiline_indexed_collection(io, slice, opening_token, closing_token)
+        else
+          write_inline_collection(io, slice, opening_token, closing_token, spacing: false)
+        end
+      end
+
       protected def label : String
         "Slice"
       end

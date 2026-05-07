@@ -68,6 +68,24 @@ module AwesomePrint
       end
     end
 
+    def write_awesome(io : IO, object) : Nil
+      case object
+      when Reference
+        if recursive?(object)
+          io << nested(object)
+        else
+          begin
+            @seen_object_ids << object.object_id
+            Formatter.new(self).write(object, io)
+          ensure
+            @seen_object_ids.pop
+          end
+        end
+      else
+        Formatter.new(self).write(object, io)
+      end
+    end
+
     private def recursive?(object : Reference) : Bool
       @seen_object_ids.includes?(object.object_id)
     end

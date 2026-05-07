@@ -67,6 +67,41 @@ module AwesomePrint
         "#{opening_token}\n#{data.join(",\n")}\n#{indent}#{closing_token}"
       end
 
+      def write_multiline_indexed_collection(io : IO, items, opening_token : String, closing_token : String) : Nil
+        io << opening_token << '\n'
+
+        width = index_width(items.size)
+        if partition = limited_partition(items.size)
+          head, tail = partition
+
+          head.times do |index|
+            io << formatted_indexed_item(items[index], index, width)
+            io << ",\n"
+          end
+
+          io << indented do
+            "#{indent}[#{head.to_s.rjust(width)}] .. [#{items.size - tail - 1}]"
+          end
+
+          if tail.positive?
+            io << ",\n"
+          end
+
+          tail.times do |offset|
+            index = items.size - tail + offset
+            io << formatted_indexed_item(items[index], index, width)
+            io << ",\n" unless offset == tail - 1
+          end
+        else
+          items.each_with_index do |item, index|
+            io << formatted_indexed_item(item, index, width)
+            io << ",\n" unless index == items.size - 1
+          end
+        end
+
+        io << '\n' << indent << closing_token
+      end
+
       def indexed_collection_lines(items) : Array(String)
         width = index_width(items.size)
         if partition = limited_partition(items.size)
@@ -113,6 +148,20 @@ module AwesomePrint
         else
           items.map { |item| inspector.awesome(item) }.to_a
         end
+      end
+
+      def write_inline_collection(io : IO, items, opening_token : String, closing_token : String, spacing : Bool = true) : Nil
+        io << opening_token
+        io << ' ' if spacing
+
+        values = inline_collection_values(items)
+        values.each_with_index do |value, index|
+          io << value
+          io << ", " unless index == values.size - 1
+        end
+
+        io << ' ' if spacing
+        io << closing_token
       end
 
       def indexed_collection_prefix(index : Int32, width : Int32) : String

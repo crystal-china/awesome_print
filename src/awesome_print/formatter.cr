@@ -64,6 +64,25 @@ module AwesomePrint
       end
     end
 
+    def write(object, io : IO) : Nil
+      case object
+      when Array
+        Formatters::ArrayFormatter.new(object, inspector).write(io)
+      when Bytes
+        Formatters::BytesFormatter.new(object, inspector).write(io)
+      when Slice
+        Formatters::SliceFormatter.new(object, inspector).write(io)
+      when StaticArray
+        Formatters::StaticArrayFormatter.new(object, inspector).write(io)
+      when Tuple
+        Formatters::TupleFormatter.new(object, inspector).write(io)
+      when Set
+        Formatters::SetFormatter.new(object, inspector).write(io)
+      else
+        io << format(object)
+      end
+    end
+
     private def convert_to_mapping(object)
       return unless object.responds_to?(:to_h)
 

@@ -5,6 +5,12 @@ private class PersonForApMacro
   end
 end
 
+private class ExplosiveForApMacro
+  def to_h
+    raise "omitted element should not be formatted"
+  end
+end
+
 private def strip_ansi(value : String) : String
   value.gsub(/\e\[[\d;]+m/, "")
 end
@@ -84,6 +90,21 @@ describe AwesomePrint do
     value = ap!([1, 2, 3, 4, 5, 6, 7], limit: 5)
 
     value.should eq([1, 2, 3, 4, 5, 6, 7])
+    output = strip_ansi(io.to_s)
+    output.should contain("[0] 1")
+    output.should contain("[1] 2")
+    output.should contain("[2] .. [4]")
+    output.should contain("[5] 6")
+    output.should contain("[6] 7")
+  end
+
+  it "does not format omitted elements when ap! prints a limited array" do
+    io = IO::Memory.new
+    AwesomePrint.output = io
+
+    value = ap!([1, 2, ExplosiveForApMacro.new, ExplosiveForApMacro.new, ExplosiveForApMacro.new, 6, 7], limit: 5)
+
+    value.size.should eq(7)
     output = strip_ansi(io.to_s)
     output.should contain("[0] 1")
     output.should contain("[1] 2")
