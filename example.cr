@@ -52,6 +52,7 @@ end
 
 numbers = [1, 2, 3]
 long_numbers = [1, 2, 3, 4, 5, 6, 7]
+huge_numbers = (1..1500000).to_a
 nested_numbers = [1, [2, 3], 4]
 bytes_value = Bytes[65, 66, 67]
 slice_value = Slice[1, 2, 3]
@@ -95,6 +96,7 @@ many_fields = ManyFields.new(1, 2, 3, 4, 5, 6, 7)
 puts "-- collections --"
 ap!(numbers)
 ap!(long_numbers, limit: 5)
+ap!(huge_numbers, limit: 7)
 ap!(nested_numbers)
 ap!(set_values)
 ap!(tuple_values)
