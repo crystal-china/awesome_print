@@ -5,15 +5,6 @@ authors:
   - Billy.Zheng (with Codex)
 
 description: |
-  A Crystal pretty-printer with an ap! macro and awesome_print-style output.
-
-# dependencies:
-#   pg:
-#     github: will/crystal-pg
-#     version: "~> 0.5"
-
-# development_dependencies:
-#   webmock:
-#     github: manastech/webmock.cr
+  Colorful pretty printing for Crystal.
 
 license: MIT
