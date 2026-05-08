@@ -45,6 +45,15 @@ struct StructKey
   end
 end
 
+struct DemoMethodLikeStruct
+  def initialize(@signature : String)
+  end
+
+  def inspect(io : IO)
+    io << @signature
+  end
+end
+
 enum DemoEnum
   Alpha
   Beta
@@ -123,6 +132,12 @@ ap!(composite_key_profile)
 puts
 puts "-- objects --"
 ap!(StructKey.new(3, 4))
+ap!([
+  DemoMethodLikeStruct.new("def c()"),
+  DemoMethodLikeStruct.new("def same?(other : Reference) : Bool"),
+  DemoMethodLikeStruct.new(%(def pretty_inspect(width = 79, newline = "\\n", indent = 0) : String)),
+  DemoMethodLikeStruct.new("def all_methods(include_module : Bool = true) : Hash(String, Array(Crystal::Meta::AbstractMethod))"),
+])
 ap!(person)
 ap!(recursive_person)
 ap!(many_fields, limit: 5)
