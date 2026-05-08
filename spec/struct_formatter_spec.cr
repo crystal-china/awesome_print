@@ -5,6 +5,15 @@ private struct PointForAwesomePrint
   end
 end
 
+private struct MethodLikeForAwesomePrint
+  def initialize(@name : String)
+  end
+
+  def inspect(io : IO)
+    io << "def " << @name << "()"
+  end
+end
+
 private def strip_ansi(value : String) : String
   value.gsub(/\e\[[\d;]+m/, "")
 end
@@ -44,6 +53,24 @@ TEXT
 PointForAwesomePrint {
   @x = 3,
   @y = 4
+}
+TEXT
+  end
+
+  it "prefers a custom inspect representation for domain structs" do
+    inspector = AwesomePrint::Inspector.new(colors_enabled: false, indent_size: 2)
+    output = AwesomePrint::Formatters::StructFormatter.new(MethodLikeForAwesomePrint.new("ccc"), inspector).format
+
+    output.should eq("def ccc()")
+  end
+
+  it "keeps raw mode on the ivar expansion path for custom inspect structs" do
+    inspector = AwesomePrint::Inspector.new(colors_enabled: false, indent_size: 2, raw: true)
+    output = AwesomePrint::Formatters::StructFormatter.new(MethodLikeForAwesomePrint.new("ccc"), inspector).format
+
+    output.should eq <<-TEXT
+MethodLikeForAwesomePrint {
+  @name = "ccc"
 }
 TEXT
   end

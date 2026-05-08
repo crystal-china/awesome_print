@@ -9,14 +9,21 @@ module AwesomePrint
 
       def format : String
         {% if T.instance_vars.empty? %}
-          struct.pretty_inspect(indent: inspector.indent_size).to_s
+          @struct.pretty_inspect(indent: inspector.indent_size).to_s
         {% else %}
-          if inspector.multiline
+          if !inspector.raw && prefer_inspect_representation?
+            @struct.inspect
+          elsif inspector.multiline
             multiline_struct
           else
             single_line_struct
           end
         {% end %}
+      end
+
+      private def prefer_inspect_representation? : Bool
+        inspected = @struct.inspect
+        !inspected.starts_with?({{ T.name.stringify + "(" }})
       end
 
       private def multiline_struct : String
