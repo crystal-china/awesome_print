@@ -2,7 +2,7 @@ name: awesome_print
 version: 0.1.0
 
 authors:
-  - Billy.Zheng
+  - Billy.Zheng (with Codex)
 
 description: |
   A Crystal pretty-printer with an ap! macro and awesome_print-style output.
