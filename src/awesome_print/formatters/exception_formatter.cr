@@ -20,7 +20,7 @@ module AwesomePrint
             frames.each do |frame|
               io << '\n'
               io << nested_indent(depth + 1)
-              io << colorize("from ", :keyword)
+              io << frame_prefix(frame)
               io << format_frame(frame)
             end
           end
@@ -69,6 +69,16 @@ module AwesomePrint
           else
             colorize(normalized, :pale)
           end
+        end
+      end
+
+      private def frame_prefix(frame : String) : String
+        if deemphasized_frame?(frame)
+          colorize("from ", :grayish)
+        elsif in_runtime_frame?(frame)
+          colorize("from ", :grayish)
+        else
+          "from "
         end
       end
 

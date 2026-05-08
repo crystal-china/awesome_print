@@ -29,7 +29,7 @@ module AwesomePrint
 
   private def self.header(file : String, line : Int32, expression : String, rendered_type : String, inspector : Inspector) : String
     String.build do |io|
-      io << Colors.grayish("#{relative_file(file)}:#{line}", inspector.colorize?)
+      io << Colors.blue("#{relative_file(file)}:#{line}", inspector.colorize?)
       io << "  "
       io << Colors.white(expression, inspector.colorize?)
       io << "  "
