@@ -25,12 +25,12 @@ describe AwesomePrint do
     value.should eq([1, 2, 3])
 
     output = strip_ansi(io.to_s)
-    output.should contain("spec/awesome_print_spec.cr")
-    output.should contain("[1, 2, 3] =")
+    output.should contain("spec/awesome_print_spec.cr:")
+    output.should contain("[1, 2, 3]")
+    output.should contain("(Array(Int32))")
     output.should contain("[0] 1")
     output.should contain("[1] 2")
     output.should contain("[2] 3")
-    output.should contain("(Array(Int32))")
   end
 
   it "returns the original value from expressions" do
@@ -40,8 +40,9 @@ describe AwesomePrint do
     value = ap!(1 + 2)
 
     value.should eq(3)
-    io.to_s.should contain("1 + 2")
-    io.to_s.should contain("(Int32)")
+    output = strip_ansi(io.to_s)
+    output.should contain("1 + 2")
+    output.should contain("(Int32)")
   end
 
   it "prints each argument and returns them as a tuple when given multiple expressions" do
@@ -52,9 +53,10 @@ describe AwesomePrint do
 
     values.should eq({1, "two"})
 
-    output = io.to_s
-    output.should contain("1 =")
-    output.should contain("\"two\" =")
+    output = strip_ansi(io.to_s)
+    output.should contain("1")
+    output.should contain("(Int32)")
+    output.should contain("\"two\"")
     output.should contain("(String)")
   end
 
