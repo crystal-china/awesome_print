@@ -1,212 +1,114 @@
 # awesome_print
 
-`awesome_print` is a Crystal pretty-printer with an `ap!` macro for debugging.
+Colorful pretty printing for Crystal.
 
-It borrows the overall feel and color scheme from Ruby `awesome_print`, keeps a formatter-oriented core closer to `amazing_print`, and uses a Crystal-friendly macro entrypoint similar to `debug.cr`.
+`awesome_print` provides an `ap!` debug macro and a string formatter. It is inspired by Ruby [`awesome_print`](https://github.com/awesome-print/awesome_print) and [`amazing_print`](https://github.com/amazing-print/amazing_print), but implemented in a Crystal-friendly style.
 
 ## Installation
 
-1. Add the dependency to your `shard.yml`:
+```yaml
+dependencies:
+  awesome_print:
+    github: zw963/awesome_print
+    version: ~> 0.1.0
+```
 
-   ```yaml
-   dependencies:
-     awesome_print:
-       github: zw963/awesome_print
-       version: ~> 0.1.0
-   ```
+Then run:
 
-2. Run `shards install`
+```bash
+shards install
+```
 
 ## Usage
 
 ```crystal
 require "awesome_print"
 
-user = {
-  name: "Diana",
-  rank: 1,
-  admin: false,
-}
+user = {name: "Diana", rank: 1, admin: false}
 
-ap!(user)
+ap! user
 ```
 
-`ap!` prints:
+`ap!` prints the source location, expression, formatted value, and type. It returns the original
+value, so it can stay inside debugging expressions.
 
-- file and line
-- the original expression
-- the formatted value
-- the Crystal type
+```crystal
+value = ap!(user) # => returns user
+```
 
-and then returns the original value, so it can stay inside expressions.
+Multiple expressions are printed one by one and returned as a tuple:
 
-By default, `ap!`, `AwesomePrint.format(...)`, and `AwesomePrint::Inspector.new` all use `indent_size: 4`.
+```crystal
+id, name = ap!(user[:id], user[:name])
+```
 
-When given multiple expressions, `ap!` prints each one and returns them as a tuple.
-
-If you want the formatted text without printing, use:
+To format without printing:
 
 ```crystal
 text = AwesomePrint.format(user)
 ```
 
-`AwesomePrint.format(...)` returns plain text by default.
-Pass `colors_enabled: true` if you want ANSI colors in the returned string.
-`ap!` still prints with colors by default.
+`AwesomePrint.format(...)` returns plain text by default. Use `colors_enabled: true` for ANSI
+colors. `ap!` prints with colors by default.
 
-### Options
+## Options
 
-`ap!` forwards named arguments into `AwesomePrint::Inspector.new(...)`.
+Options are passed to `AwesomePrint::Inspector`:
 
-Currently supported options:
+```crystal
+ap!(user, limit: 5, order: :sorted)
+AwesomePrint.format(user, multiline: false)
+```
 
-- `indent_size : Int32 = 4`
-- `multiline : Bool = true`
-- `index : Bool = true`
-- `limit : Int32? = nil`
-- `raw : Bool = false`
-- `colors_enabled : Bool = true`
-- `show_backtrace : Bool = true`
-- `backtrace_limit : Int32 = 8`
-- `order : AwesomePrint::Inspector::Order = :natural`
-- `hash_format : AwesomePrint::Inspector::HashFormat = :symbol`
+Common options:
 
-These are also the defaults used by `ap!` and `AwesomePrint.format(...)`, unless you override them explicitly.
+- `indent_size: 4`
+- `multiline: true`
+- `index: true`
+- `limit: nil`
+- `order: :natural | :sorted`
+- `hash_format: :symbol | :rocket | :json`
+- `raw: false`
+- `colors_enabled: true`
+- `show_backtrace: true`
+- `backtrace_limit: 8`
 
-### Examples
-
-Single line output:
+## Examples
 
 ```crystal
 ap!([1, 2, 3], multiline: false)
-```
-
-Limited output:
-
-```crystal
 ap!([1, 2, 3, 4, 5, 6, 7], limit: 5)
-```
-
-Hash output styles:
-
-```crystal
-ap!(user_hash, hash_format: :symbol)
-ap!(user_hash, hash_format: :rocket)
-ap!(user_hash, hash_format: :json)
-```
-
-Sorted object fields:
-
-```crystal
-person = Person.new("Diana", 1, false, "active")
-ap!(person, order: :sorted)
-```
-
-Raw object output:
-
-```crystal
-ap!(user_view, raw: true)
-```
-
-Backtrace control:
-
-```crystal
-ap!(error)
-ap!(error, show_backtrace: false)
+ap!(hash, hash_format: :rocket)
+ap!(object, raw: true)
 ap!(error, backtrace_limit: 5)
 ```
 
-Multiple expressions:
+Objects that implement `to_h` and return a `Hash` or `NamedTuple` are formatted as mappings by
+default. Use `raw: true` to inspect their instance variables instead.
 
-```crystal
-value1, value2 = ap!(user.id, user.name)
-```
+## Supported Types
 
-String output without printing:
+Custom formatters currently cover:
 
-```crystal
-text = AwesomePrint.format(user, multiline: false)
-colored = AwesomePrint.format(user, multiline: false, colors_enabled: true)
-```
+`Array`, `Hash`, `NamedTuple`, `Tuple`, `Set`, `Slice`, `Bytes`, `StaticArray`, `Struct`,
+regular objects, `Class`, `Enum`, `Exception`, `Path`, `File`, `Dir`, `Regex`, `Range`, and `Time`.
 
-Hash-like objects with `to_h`:
+## Preview
 
-```crystal
-class UserView
-  def initialize(@name : String, @rank : Int32)
-  end
-
-  def to_h
-    {name: @name, rank: @rank}
-  end
-end
-
-AwesomePrint.format(UserView.new("Diana", 1))
-# => formats as a mapping by default
-
-AwesomePrint.format(UserView.new("Diana", 1), raw: true)
-# => formats as an object with instance variables
-```
-
-### Supported formatters
-
-Current custom formatters cover:
-
-- `Array`
-- `Bytes`
-- `Class`
-- `Slice`
-- `StaticArray`
-- `Set`
-- `Tuple`
-- `Hash`
-- `NamedTuple`
-- `Struct`
-- regular objects
-- `Enum`
-- `Exception`
-- `Path`
-- `File`
-- `Dir`
-- `Regex`
-- `Range`
-- `Time`
-
-Notes:
-
-- `Hash` and `NamedTuple` support `hash_format: :symbol | :rocket | :json`
-- objects that respond to `to_h` and return `Hash` or `NamedTuple` are formatted as mappings by default
-- `raw: true` forces those objects back onto the normal object formatter path
-
-### Preview script
-
-For a quick manual preview of the current output:
+Run:
 
 ```bash
 crystal run example.cr
 ```
 
-## Development
+`example.cr` shows the current output style across common Crystal values.
 
-Run the full spec suite:
+## Development
 
 ```bash
 CRYSTAL_CACHE_DIR=/tmp/crystal-cache crystal spec
 ```
 
-The repository also includes:
-
-- `example.cr` for manual output review
-- `2.cr` for a very small color comparison sample
-
-## Contributing
-
-1. Fork it (<https://github.com/zw963/awesome_print/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
-
 ## Contributors
 
-- [Billy.Zheng](https://github.com/zw963) - creator and maintainer
+- [Billy.Zheng](https://github.com/zw963)
