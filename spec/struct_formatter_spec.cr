@@ -14,6 +14,15 @@ private struct MethodLikeForAwesomePrint
   end
 end
 
+private struct RichMethodLikeForAwesomePrint
+  def initialize(@name : String = "pretty_inspect")
+  end
+
+  def inspect(io : IO)
+    io << "def " << @name << %((width = 79, newline = "\\n", indent = 0) : String)
+  end
+end
+
 private def strip_ansi(value : String) : String
   value.gsub(/\e\[[\d;]+m/, "")
 end
@@ -62,6 +71,17 @@ TEXT
     output = AwesomePrint::Formatters::StructFormatter.new(MethodLikeForAwesomePrint.new("ccc"), inspector).format
 
     output.should eq("def ccc()")
+  end
+
+  it "adds light syntax coloring to method-like inspect representations" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2)
+    output = AwesomePrint::Formatters::StructFormatter.new(RichMethodLikeForAwesomePrint.new, inspector).format
+
+    strip_ansi(output).should eq %(def pretty_inspect(width = 79, newline = "\\n", indent = 0) : String)
+    output.should contain(AwesomePrint::Colors.keyword("def"))
+    output.should contain(AwesomePrint::Colors.symbol("pretty_inspect"))
+    output.should contain(AwesomePrint::Colors.string(%("\\n")))
+    output.should contain(AwesomePrint::Colors.class("String"))
   end
 
   it "keeps raw mode on the ivar expansion path for custom inspect structs" do
