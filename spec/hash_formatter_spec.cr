@@ -168,6 +168,14 @@ TEXT
     output.should_not contain("\n  @id = 1\n}> =>")
   end
 
+  it "passes object_id options to object keys" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, object_id: false)
+    output = AwesomePrint::Formatters::HashFormatter.new({HashKeyForAwesomePrint.new(1) => "one"}, inspector).format
+
+    output.should contain("#<HashKeyForAwesomePrint { @id = 1 }> => \"one\"")
+    output.should_not contain(":0x")
+  end
+
   it "formats tuple, named tuple, and struct keys on a single line" do
     inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false)
     output = AwesomePrint::Formatters::HashFormatter.new({

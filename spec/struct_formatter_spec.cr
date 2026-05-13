@@ -23,6 +23,12 @@ private struct RichMethodLikeForAwesomePrint
   end
 end
 
+private struct CustomInspectForAwesomePrint
+  def inspect(io : IO)
+    io << "custom domain value"
+  end
+end
+
 private def strip_ansi(value : String) : String
   value.gsub(/\e\[[\d;]+m/, "")
 end
@@ -82,6 +88,13 @@ TEXT
     output.should contain(AwesomePrint::Colors.symbol("pretty_inspect"))
     output.should contain(AwesomePrint::Colors.string(%("\\n")))
     output.should contain(AwesomePrint::Colors.class("String"))
+  end
+
+  it "leaves non-method custom inspect representations unchanged" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2)
+    output = AwesomePrint::Formatters::StructFormatter.new(CustomInspectForAwesomePrint.new, inspector).format
+
+    output.should eq("custom domain value")
   end
 
   it "keeps raw mode on the ivar expansion path for custom inspect structs" do

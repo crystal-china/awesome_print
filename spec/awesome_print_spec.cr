@@ -75,6 +75,19 @@ describe AwesomePrint do
     admin_index.should be < name_index
   end
 
+  it "passes object_id options through ap!" do
+    io = IO::Memory.new
+    AwesomePrint.output = io
+    person = PersonForApMacro.new("Diana", 1, false, "active")
+
+    value = ap!(person, object_id: false)
+
+    value.should be(person)
+    output = strip_ansi(io.to_s)
+    output.should contain("#<PersonForApMacro {")
+    output.should_not contain(":0x")
+  end
+
   it "passes multiline options through ap!" do
     io = IO::Memory.new
     AwesomePrint.output = io
@@ -155,6 +168,17 @@ describe AwesomePrint do
     formatted.should eq("[\n    [0] 1,\n    [1] 2,\n    [2] 3\n]")
   end
 
+  it "keeps streamed output consistent with formatted strings" do
+    io = IO::Memory.new
+    inspector = AwesomePrint::Inspector.new(colors_enabled: false, indent_size: 2, object_id: false)
+    person = PersonForApMacro.new("Diana", 1, false, "active")
+    value = [person, {name: "Diana", rank: 1}]
+
+    inspector.write_awesome(io, value)
+
+    io.to_s.should eq(inspector.awesome(value))
+  end
+
   it "accepts an explicit inspector when using AwesomePrint.format" do
     inspector = AwesomePrint::Inspector.new(multiline: false, colors_enabled: false, order: :sorted)
 
@@ -168,5 +192,13 @@ describe AwesomePrint do
 
     output.should_not eq("[ 1, 2, 3 ]")
     strip_ansi(output).should eq("[ 1, 2, 3 ]")
+  end
+
+  it "passes object_id options through AwesomePrint.format" do
+    person = PersonForApMacro.new("Diana", 1, false, "active")
+    output = AwesomePrint.format(person, object_id: false)
+
+    output.should contain("#<PersonForApMacro {")
+    output.should_not contain(":0x")
   end
 end
