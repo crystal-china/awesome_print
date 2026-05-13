@@ -83,8 +83,10 @@ module AwesomePrint
           String.build do |io|
             io << colorize("#<", :hash)
             io << colorize({{ T.name.stringify }}, :class)
-            io << colorize(":0x", :hash)
-            io << colorize(object.object_id.to_s(16), :number)
+            if inspector.object_id
+              io << colorize(":0x", :hash)
+              io << colorize(object.object_id.to_s(16), :number)
+            end
           end
         {% else %}
           colorize({{ T.name.stringify }}, :class)

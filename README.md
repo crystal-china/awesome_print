@@ -72,6 +72,7 @@ Common options:
 - `colors_enabled: true`
 - `show_backtrace: true`
 - `backtrace_limit: 8`
+- `object_id: true`
 
 ## Examples
 
@@ -80,6 +81,7 @@ ap!([1, 2, 3], multiline: false)
 ap!([1, 2, 3, 4, 5, 6, 7], limit: 5)
 ap!(hash, hash_format: :rocket)
 ap!(object, raw: true)
+ap!(object, object_id: false)
 ap!(error, backtrace_limit: 5)
 ```
 

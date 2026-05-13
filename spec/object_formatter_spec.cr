@@ -29,6 +29,15 @@ describe AwesomePrint::Formatters::ObjectFormatter do
     strip_ansi(output).should contain("#<PersonForAwesomePrint:0x")
   end
 
+  it "omits object ids when object_id is disabled" do
+    inspector = AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, object_id: false)
+    output = AwesomePrint::Formatters::ObjectFormatter.new(PersonForAwesomePrint.new("Diana", 1, false, "active"), inspector).format
+
+    output.should contain("#<PersonForAwesomePrint {")
+    output.should_not contain(":0x")
+    output.should contain("@name = \"Diana\"")
+  end
+
   it "falls back to pretty_inspect for ivar-less values" do
     inspector = AwesomePrint::Inspector.new(colors_enabled: false)
     output = AwesomePrint::Formatters::ObjectFormatter.new(42, inspector).format

@@ -100,6 +100,7 @@ module AwesomePrint
           colors_enabled: inspector.colors_enabled,
           show_backtrace: inspector.show_backtrace,
           backtrace_limit: inspector.backtrace_limit,
+          object_id: inspector.object_id,
           order: inspector.order,
           hash_format: inspector.hash_format
         )

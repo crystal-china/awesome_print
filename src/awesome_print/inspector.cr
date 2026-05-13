@@ -20,6 +20,7 @@ module AwesomePrint
     getter colors_enabled : Bool
     getter show_backtrace : Bool
     getter backtrace_limit : Int32
+    getter object_id : Bool
     getter order : Order
     getter hash_format : HashFormat
 
@@ -32,6 +33,7 @@ module AwesomePrint
       @colors_enabled : Bool = true,
       @show_backtrace : Bool = true,
       @backtrace_limit : Int32 = 8,
+      @object_id : Bool = true,
       @order : Order = :natural,
       @hash_format : HashFormat = :symbol
     )
