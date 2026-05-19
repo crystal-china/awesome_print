@@ -207,7 +207,7 @@ module AwesomePrint
       end
 
       def multiline_braced_mapping(data : Array(String), width : Int32) : String
-        if should_be_limited?
+        if should_be_limited? && data.size > get_limit_size
           data = limited(data, width, true)
           separator_index = get_limit_size // 2
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"

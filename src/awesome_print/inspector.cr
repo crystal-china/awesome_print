@@ -1,4 +1,12 @@
 module AwesomePrint
+  def self.settings : Inspector::Settings
+    Inspector.settings
+  end
+
+  def self.configure(&) : Nil
+    yield settings
+  end
+
   class Inspector
     enum Order
       Natural
@@ -10,6 +18,22 @@ module AwesomePrint
       Rocket
       Json
     end
+
+    class Settings
+      property indent_size : Int32 = 4
+      property multiline : Bool = true
+      property index : Bool = true
+      property limit : Int32? = nil
+      property raw : Bool = false
+      property colors_enabled : Bool? = nil
+      property show_backtrace : Bool = true
+      property backtrace_limit : Int32 = 8
+      property object_id : Bool = true
+      property order : Order = :natural
+      property hash_format : HashFormat = :symbol
+    end
+
+    class_getter settings = Settings.new
 
     getter indent_size : Int32
     getter current_indentation : Int32
@@ -40,6 +64,64 @@ module AwesomePrint
       @current_indentation = 0
       @seen_object_ids = [] of UInt64
       @formatter = nil
+    end
+
+    def self.configure(&) : Nil
+      yield settings
+    end
+
+    def self.from_defaults(*, default_colors_enabled : Bool = true, **options) : Inspector
+      from_defaults(options, default_colors_enabled)
+    end
+
+    private def self.from_defaults(options : T, default_colors_enabled : Bool) : Inspector forall T
+      defaults = settings
+      configured_colors = defaults.colors_enabled
+
+      new(
+        indent_size: {% if T.keys.includes?(:indent_size.id) %} options[:indent_size] {% else %} defaults.indent_size {% end %},
+        multiline: {% if T.keys.includes?(:multiline.id) %} options[:multiline] {% else %} defaults.multiline {% end %},
+        index: {% if T.keys.includes?(:index.id) %} options[:index] {% else %} defaults.index {% end %},
+        limit: {% if T.keys.includes?(:limit.id) %} options[:limit] {% else %} defaults.limit {% end %},
+        raw: {% if T.keys.includes?(:raw.id) %} options[:raw] {% else %} defaults.raw {% end %},
+        colors_enabled: {% if T.keys.includes?(:colors_enabled.id) %}
+                          options[:colors_enabled]
+                        {% else %}
+                          configured_colors.nil? ? default_colors_enabled : configured_colors.not_nil!
+                        {% end %},
+        show_backtrace: {% if T.keys.includes?(:show_backtrace.id) %} options[:show_backtrace] {% else %} defaults.show_backtrace {% end %},
+        backtrace_limit: {% if T.keys.includes?(:backtrace_limit.id) %} options[:backtrace_limit] {% else %} defaults.backtrace_limit {% end %},
+        object_id: {% if T.keys.includes?(:object_id.id) %} options[:object_id] {% else %} defaults.object_id {% end %},
+        order: normalize_order({% if T.keys.includes?(:order.id) %} options[:order] {% else %} defaults.order {% end %}),
+        hash_format: normalize_hash_format({% if T.keys.includes?(:hash_format.id) %} options[:hash_format] {% else %} defaults.hash_format {% end %})
+      )
+    end
+
+    private def self.normalize_order(value : Order) : Order
+      value
+    end
+
+    private def self.normalize_order(value : Symbol) : Order
+      case value
+      when :natural then Order::Natural
+      when :sorted  then Order::Sorted
+      else
+        raise ArgumentError.new("Invalid order: #{value.inspect}")
+      end
+    end
+
+    private def self.normalize_hash_format(value : HashFormat) : HashFormat
+      value
+    end
+
+    private def self.normalize_hash_format(value : Symbol) : HashFormat
+      case value
+      when :symbol then HashFormat::Symbol
+      when :rocket then HashFormat::Rocket
+      when :json   then HashFormat::Json
+      else
+        raise ArgumentError.new("Invalid hash_format: #{value.inspect}")
+      end
     end
 
     def increase_indentation(&)

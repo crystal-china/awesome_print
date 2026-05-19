@@ -74,6 +74,29 @@ Common options:
 - `backtrace_limit: 8`
 - `object_id: true`
 
+## Configuration
+
+Set global defaults with `AwesomePrint.configure`:
+
+```crystal
+AwesomePrint.configure do |settings|
+  settings.indent_size = 4
+  settings.limit = 20
+  settings.object_id = false
+  settings.order = :natural
+end
+```
+
+Per-call options override configured defaults:
+
+```crystal
+ap!(users, limit: 5)
+AwesomePrint.format(user, object_id: true)
+```
+
+`ap!` uses colors by default. `AwesomePrint.format(...)` returns plain text by default, unless
+`colors_enabled` is configured or passed explicitly.
+
 ## Examples
 
 ```crystal

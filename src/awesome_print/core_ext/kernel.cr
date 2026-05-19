@@ -15,12 +15,11 @@ module AwesomePrint
         }
 
         {% unless options.empty? %}
-          %ap_inspector = ::AwesomePrint::Inspector.new(
-            indent_size: 4,
+          %ap_inspector = ::AwesomePrint::Inspector.from_defaults(
             {{ options.double_splat }}
           )
         {% else %}
-          %ap_inspector = ::AwesomePrint::Inspector.new(indent_size: 4)
+          %ap_inspector = ::AwesomePrint::Inspector.from_defaults
         {% end %}
 
         {% for arg, i in args %}

@@ -21,7 +21,7 @@ module AwesomePrint
 
       private def multiline_object : String
         data = field_lines
-        if should_be_limited?
+        if should_be_limited? && data.size > get_limit_size
           data = limited(data, field_width, true)
           separator_index = get_limit_size // 2
           data[separator_index] = "#{indent(inspector.indent_size)}#{data[separator_index]}"

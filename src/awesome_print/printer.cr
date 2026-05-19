@@ -1,15 +1,15 @@
 module AwesomePrint
   class_property output : IO = STDOUT
 
-  def self.format(value, inspector : Inspector = Inspector.new(indent_size: 4, colors_enabled: false)) : String
+  def self.format(value, inspector : Inspector = Inspector.from_defaults(default_colors_enabled: false)) : String
     pretty(value, inspector)
   end
 
   def self.format(value, **options) : String
-    format(value, Inspector.new(**{colors_enabled: false}.merge(options)))
+    format(value, Inspector.from_defaults(**options, default_colors_enabled: false))
   end
 
-  def self.print(*, expression : String, value, file : String, line : Int32, inspector : Inspector = Inspector.new(indent_size: 4))
+  def self.print(*, expression : String, value, file : String, line : Int32, inspector : Inspector = Inspector.from_defaults)
     rendered_type = typeof(value).to_s
 
     output << header(file, line, expression, rendered_type, inspector)

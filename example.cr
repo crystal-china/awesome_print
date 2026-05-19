@@ -172,6 +172,19 @@ puts "-- exception --"
 ap!(error_value)
 
 puts
+puts "-- configured defaults --"
+AwesomePrint.configure do |settings|
+  settings.limit = 5
+  settings.object_id = false
+end
+ap!(long_numbers)
+ap!(person)
+AwesomePrint.configure do |settings|
+  settings.limit = nil
+  settings.object_id = true
+end
+
+puts
 # Keep one no-color baseline sample for structure-only comparisons.
 puts "-- custom inspector: natural order --"
 puts AwesomePrint::Inspector.new(indent_size: 2, colors_enabled: false, order: :natural).awesome(profile)
