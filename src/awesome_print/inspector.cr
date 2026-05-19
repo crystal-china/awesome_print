@@ -29,6 +29,7 @@ module AwesomePrint
       property show_backtrace : Bool = true
       property backtrace_limit : Int32 = 8
       property object_id : Bool = true
+      property max_path_length : Int32? = 42
       property order : Order = :natural
       property hash_format : HashFormat = :symbol
     end
@@ -45,6 +46,7 @@ module AwesomePrint
     getter show_backtrace : Bool
     getter backtrace_limit : Int32
     getter object_id : Bool
+    getter max_path_length : Int32?
     getter order : Order
     getter hash_format : HashFormat
 
@@ -58,6 +60,7 @@ module AwesomePrint
       @show_backtrace : Bool = true,
       @backtrace_limit : Int32 = 8,
       @object_id : Bool = true,
+      @max_path_length : Int32? = 42,
       @order : Order = :natural,
       @hash_format : HashFormat = :symbol
     )
@@ -92,6 +95,7 @@ module AwesomePrint
         show_backtrace: {% if T.keys.includes?(:show_backtrace.id) %} options[:show_backtrace] {% else %} defaults.show_backtrace {% end %},
         backtrace_limit: {% if T.keys.includes?(:backtrace_limit.id) %} options[:backtrace_limit] {% else %} defaults.backtrace_limit {% end %},
         object_id: {% if T.keys.includes?(:object_id.id) %} options[:object_id] {% else %} defaults.object_id {% end %},
+        max_path_length: {% if T.keys.includes?(:max_path_length.id) %} options[:max_path_length] {% else %} defaults.max_path_length {% end %},
         order: normalize_order({% if T.keys.includes?(:order.id) %} options[:order] {% else %} defaults.order {% end %}),
         hash_format: normalize_hash_format({% if T.keys.includes?(:hash_format.id) %} options[:hash_format] {% else %} defaults.hash_format {% end %})
       )

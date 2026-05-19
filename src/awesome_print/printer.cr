@@ -29,7 +29,7 @@ module AwesomePrint
 
   private def self.header(file : String, line : Int32, expression : String, rendered_type : String, inspector : Inspector) : String
     String.build do |io|
-      io << Colors.blue("#{relative_file(file)}:#{line}", inspector.colorize?)
+      io << Colors.blue("#{display_file(file, inspector)}:#{line}", inspector.colorize?)
       io << "  "
       io << Colors.white(expression, inspector.colorize?)
       io << "  "
@@ -42,5 +42,14 @@ module AwesomePrint
   private def self.relative_file(file : String) : String
     root = "#{Dir.current}/"
     file.starts_with?(root) ? file.lchop(root) : file
+  end
+
+  private def self.display_file(file : String, inspector : Inspector) : String
+    path = relative_file(file)
+    max = inspector.max_path_length
+    return path unless max
+    return path if max <= 0 || path.size <= max
+
+    "…#{path[-(max - 1)..]}"
   end
 end

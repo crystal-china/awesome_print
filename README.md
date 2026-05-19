@@ -73,6 +73,7 @@ Common options:
 - `show_backtrace: true`
 - `backtrace_limit: 8`
 - `object_id: true`
+- `max_path_length: 42`
 
 ## Configuration
 
@@ -83,6 +84,7 @@ AwesomePrint.configure do |settings|
   settings.indent_size = 4
   settings.limit = 20
   settings.object_id = false
+  settings.max_path_length = 42
   settings.order = :natural
 end
 ```

@@ -16,6 +16,7 @@ private def reset_awesome_print_settings
     settings.show_backtrace = true
     settings.backtrace_limit = 8
     settings.object_id = true
+    settings.max_path_length = 42
     settings.order = :natural
     settings.hash_format = :symbol
   end
@@ -90,5 +91,47 @@ TEXT
     ensure
       reset_awesome_print_settings
     end
+  end
+
+  it "shortens long ap! header paths with max_path_length" do
+    reset_awesome_print_settings
+
+    begin
+      AwesomePrint.configure do |settings|
+        settings.max_path_length = 26
+      end
+
+      io = IO::Memory.new
+      AwesomePrint.output = io
+      inspector = AwesomePrint::Inspector.from_defaults(colors_enabled: false)
+
+      AwesomePrint.print(
+        expression: "value",
+        value: 1,
+        file: "#{Dir.current}/spec/fixtures/deeply/nested/example.cr",
+        line: 12,
+        inspector: inspector
+      )
+
+      io.to_s.should contain("…/deeply/nested/example.cr:12  value  (Int32)")
+    ensure
+      reset_awesome_print_settings
+    end
+  end
+
+  it "keeps short ap! header paths unchanged" do
+    io = IO::Memory.new
+    AwesomePrint.output = io
+    inspector = AwesomePrint::Inspector.new(colors_enabled: false)
+
+    AwesomePrint.print(
+      expression: "value",
+      value: 1,
+      file: "#{Dir.current}/example.cr",
+      line: 12,
+      inspector: inspector
+    )
+
+    io.to_s.should contain("example.cr:12  value  (Int32)")
   end
 end
